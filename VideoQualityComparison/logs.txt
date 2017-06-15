@@ -1,0 +1,4 @@
+WARNING: Frame total difference detected! org: 925.000000 re: 900.000000
+WARNING: Frame total difference detected! org: 901.000000 re: 900.000000
+WARNING: Frame total difference detected! org: 601.000000 re: 600.000000
+WARNING: Frame total difference detected! org: 900.000000 re: 899.000000
