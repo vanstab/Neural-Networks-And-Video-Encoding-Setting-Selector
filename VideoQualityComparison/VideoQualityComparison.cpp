@@ -63,8 +63,6 @@ float VideoQualityComparison::compareVideo(VideoCapture org, VideoCapture recode
 		Logger::log("Frame size differences deterted, skipping video analyse", Logger::error);
 		return 0;
 	}
-	logAnalyseInfo(to_string(org.get(CAP_PROP_FRAME_WIDTH)));
-	logAnalyseInfo(to_string(org.get(CAP_PROP_FRAME_HEIGHT)));
 	for (int i = 0; i < compareFrames; i++){
 		org.read(frameOrg);
 		recoded.read(frameRecoded);
@@ -74,9 +72,9 @@ float VideoQualityComparison::compareVideo(VideoCapture org, VideoCapture recode
 	return count;
 }
 
-float VideoQualityComparison::compareQuality(string orgName, string newName){
-	VideoCapture source(orgName);
-	VideoCapture reencoded(newName);
+float VideoQualityComparison::compareQuality(VideoData *data){
+	VideoCapture source(data->getPathOrg());
+	VideoCapture reencoded(data->getPathRe());
 	if (!source.isOpened()){
 		Logger::log("Failed to load source video", Logger::error);
 		return -1;
@@ -96,7 +94,10 @@ float VideoQualityComparison::compareQuality(string orgName, string newName){
 		moveWindow("Comparison", 460, 460);
 		moveWindow("Videos", 100,100);
 	}
-
+	data->setFrameHeight(source.get(CAP_PROP_FRAME_HEIGHT));
+	data->setFrameWidth(source.get(CAP_PROP_FRAME_WIDTH));
+	logAnalyseInfo(to_string(source.get(CAP_PROP_FRAME_WIDTH)));
+	logAnalyseInfo(to_string(reencoded.get(CAP_PROP_FRAME_HEIGHT)));
 	value = compareVideo(source, reencoded,-1);
 	
 	if (TESTING){
@@ -107,6 +108,7 @@ float VideoQualityComparison::compareQuality(string orgName, string newName){
 	source.release();
 	reencoded.release();
 	logAnalyseInfo(to_string(value / 100));
+	data->setPercentSame(value);
 	return value;
 }
 

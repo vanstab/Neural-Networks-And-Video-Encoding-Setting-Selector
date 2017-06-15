@@ -8,6 +8,7 @@
 #include <string>
 #include <windows.h>
 
+#include "VideoData.h"
 #include "defs.h"
 #include "logger.h"
 using namespace cv;
@@ -17,7 +18,7 @@ class VideoQualityComparison
 public:
 	VideoQualityComparison();
 	~VideoQualityComparison();
-	float compareQuality(string, string);
+	float compareQuality(VideoData*);
 	void logAnalyseInfo(string);
 private:
 	float compareImage(Mat,Mat);
