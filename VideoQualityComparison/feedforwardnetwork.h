@@ -1,12 +1,17 @@
 #pragma once
+#include "Neuron.h"
 class FeedForwardNetwork
 {
 public:
-	FeedForwardNetwork();
+	FeedForwardNetwork(int*, int size);
 	~FeedForwardNetwork();
+	void run();
 private:
-	int size;
-	double biases;
-	double wieght;
+	bool running = true;
+	Neuron** neuralNetwork;
+	int* networkColsSize; //might not need
+	int depthOfNetwork;
+	
+
 };
 
