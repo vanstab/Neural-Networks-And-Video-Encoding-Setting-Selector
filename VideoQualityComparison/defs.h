@@ -19,3 +19,14 @@
 -no-two-pass again for speed of encoding, enabling takes 2x longer to render
 */
 #define VIDEO_ENCODING_COMMAND "HandBrakeCLI -f av_mp4 -E copy -e x264 --no-loose-crop --encoder-profile main --no-two-pass"
+#define EPHOC_TRAIN_MAX 100
+#define LEARNING_RATE 0.05
+#define MOMENTUM 0.5
+#define BFRAMEMAX 16
+#define REFFRAMEMAX 6
+//defined by classes
+#define OUTPUT_NEURONS 3
+
+#define HIDDEN_NEURONS 3
+#define SAMPLE_COUNT 196
+#define MAX_DECIMALS 1000000000000000
