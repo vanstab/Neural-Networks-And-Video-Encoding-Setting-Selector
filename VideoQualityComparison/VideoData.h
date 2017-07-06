@@ -12,6 +12,7 @@ public:
 	string toString();
 	string getPathOrg();
 	string getPathRe();
+	float getPercentSame();
 	void setSizeOrg(double);
 	void setSizeRe(double);
 	void setPercentSame(float);
@@ -19,6 +20,10 @@ public:
 	void setFrameWidth(int);
 	void setPathOrg(string);
 	void setPathRe(string);
+	double getHeight();
+	double getWidth();
+	double getSizeOrg();
+	double getSizeRe();
 private:
 	string pathOrg;
 	string pathRe;

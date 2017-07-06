@@ -3,6 +3,7 @@
 #define FramesToCompare 1800
 #define TESTING false
 #define MAX_ARRAY 64
+#define VIDEO_TRAIN_SET_SIZE 10
 #define TRAINNING_INFO_PATH "trainning_data.dat"
 #define REBUILD_TRAINNING_DATA false
 
@@ -20,7 +21,7 @@
 */
 #define VIDEO_ENCODING_COMMAND "HandBrakeCLI -f av_mp4 -E copy -e x264 --no-loose-crop --encoder-profile main --no-two-pass"
 #define EPHOC_TRAIN_MAX 100
-#define LEARNING_RATE 0.05
+#define LEARNING_RATE 0.5
 #define MOMENTUM 0.5
 #define BFRAMEMAX 16
 #define REFFRAMEMAX 6
@@ -30,3 +31,4 @@
 #define HIDDEN_NEURONS 3
 #define SAMPLE_COUNT 196
 #define MAX_DECIMALS 1000000000000000
+#define OUTPUT_TRAINING_INFO_PATH "outputTraining.dat"

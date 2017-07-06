@@ -9,10 +9,11 @@ public:
 	void train();
 	void init();
 	void load();
-	void add(VideoData*);
+	void add(double*, double*);
 	void normalise();
+	double **list;
+	double **out;
 private:
-	VideoData *list[MAX_ARRAY];
 	void toFile();
 	int size;
 	int nin;

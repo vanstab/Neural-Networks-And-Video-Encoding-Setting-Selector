@@ -2,36 +2,36 @@
 #include <math.h>
 #include <iostream>
 #include "defs.h"
-#include <exception>
+#include "CustomExceptions.h"
 /*
 int shared dimension
 int first rows
 int seconds cols
 */
-double** networkMath::dotProduct(int n, int row, int cols, double** first, double** second){
-	double** dotProductValue = new double*[row];
-	for (int i = 0; i < row; i++)
-		dotProductValue[i] = new double[cols];
+void networkMath::dotProduct(int n, int row, int cols, double** first, double** second, double** out){
+
 	for (int y = 0; y < row; y++){
 		for (int x = 0; x < cols; x++){
-			dotProductValue[y][x] = (double)0.0;
+			out[y][x] = (double)0.0;
 
 			for (int dot = 0; dot < n; dot++){
-				dotProductValue[y][x] += first[y][dot] * second[dot][x];
+				out[y][x] += first[y][dot] * second[dot][x];
+			}
+			if (out[y][x] != out[y][x]){
+				std::cout << "dot:";
+				throw NANException(); 
 			}
 		}
 	}
-	
-	return dotProductValue;
 }
 
 
 
 double networkMath::sigmoid(double z){
 	
-	if ((1.0 + exp(-z)) == 0){ 
-		std::cout << "ops" << std::endl;
-		throw "divided by 0"; }
+	if (z!=z || 1 / (1.0 + exp(-z)) != 1 / (1.0 + exp(-z))){
+		throw NANException();
+	}
 	return  1.0 / (1.0 + exp(-z));
 }
 /*
@@ -80,6 +80,10 @@ double* networkMath::derivativeOneD(double* in, int size){
 	return out;
 }
 double networkMath::sigmoidPrime(double z){
+	if ((sigmoid(z)*(1 - sigmoid(z))) != (sigmoid(z)*(1 - sigmoid(z)))){
+		std::cout << "primesig:";
+		throw NANException();
+	}
 	return sigmoid(z)*(1 - sigmoid(z));
 }
 double** networkMath::scalar_mul(double eta, double** mat, int height, int length){
@@ -125,9 +129,9 @@ double networkMath::costDerivative(double activation, double eta){
 }
 double networkMath::round(double in){
 	if (in != in){
-		throw "VALUE ERROR";
+		std::cout << "round";
+		throw NANException();
 	}
-	if (in > 10) throw "value to big";
 	in = floor(in * MAX_DECIMALS) / MAX_DECIMALS;
 	
 	return in;

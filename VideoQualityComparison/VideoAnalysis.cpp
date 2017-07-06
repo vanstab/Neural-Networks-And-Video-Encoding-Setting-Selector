@@ -1,9 +1,6 @@
 #include "VideoAnalysis.h"
-
-#include <iostream>
 #include <opencv2/imgcodecs.hpp>
 #include "defs.h"
-
 using namespace std;
 VideoAnalysis::VideoAnalysis()
 {
@@ -15,13 +12,13 @@ VideoAnalysis::~VideoAnalysis()
 }
 
 void VideoAnalysis::scaleDownAndAnalysis(VideoCapture* input, double changeAnalysis[SCALE_DOWN_WIDTH][SCALE_DOWN_HEIGHT]){
-	int frameCount = input->get(CAP_PROP_FRAME_COUNT);
-	double changePercent = (double)1 / frameCount;
+	int frameCount = input->get(CAP_PROP_FRAME_COUNT)-1;
+	double changePercent = (double)1 / (double)(frameCount-1);
 	Mat org, scale, scalePre;
 	//scales down the input to allow faster analysis
 	input->read(org);
 	resize(org, scalePre, cvSize(SCALE_DOWN_WIDTH, SCALE_DOWN_HEIGHT));
-	
+
 	//checks which pixels changed and adds a overall percent change value to the changePercentmatrix
 	for (int i = 1; i <frameCount; i++){
 		input->read(org);
