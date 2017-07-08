@@ -2,12 +2,13 @@
 #include "Neuron.h"
 #include "DoubleTuple.h"
 #include "defs.h"
+#include "TrainningSet.h"
 #include <string>
 using namespace std;
 class FeedForwardNetwork
 {
 public:
-	FeedForwardNetwork(int*, int size);
+	FeedForwardNetwork(int*, int, TrainningSet*);
 	~FeedForwardNetwork();
 	void train();
 	double* activate(double**,int);
@@ -19,7 +20,7 @@ public:
 	//double actderiv(double);
 	void backpropogate(double);
 
-	DoubleTuple* backpropogation(double*, double*);
+	void backpropogation(double*, double*, DoubleTuple*);
 	void feedForward(double*);
 
 
@@ -31,5 +32,6 @@ private:
 	int depthOfNetwork;
 	double totalError = 0;
 	int outputs =1;
+	TrainningSet* trainSet;
 };
 

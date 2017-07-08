@@ -2,7 +2,7 @@
 class networkMath
 {
 public:
-	static double** dotProduct(int, int, int, double**, double**);
+	static void dotProduct(int, int, int, double**, double**, double**);
 	static double** horizontalConcat(double**, double**, int, int, int);
 	static double** horizontalConcat(double*, double*, int);
 	static double   sigmoid(double);

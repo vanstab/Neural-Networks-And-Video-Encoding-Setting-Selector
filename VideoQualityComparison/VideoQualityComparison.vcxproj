@@ -98,28 +98,25 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="BFrame.h" />
+    <ClInclude Include="CustomExceptions.h" />
     <ClInclude Include="defs.h" />
     <ClInclude Include="DoubleTuple.h" />
     <ClInclude Include="feedforwardnetwork.h" />
     <ClInclude Include="logger.h" />
     <ClInclude Include="networkMath.h" />
     <ClInclude Include="Neuron.h" />
-    <ClInclude Include="RefFrame.h" />
     <ClInclude Include="TrainningSet.h" />
     <ClInclude Include="VideoAnalysis.h" />
     <ClInclude Include="VideoData.h" />
     <ClInclude Include="videoQualityComparison.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BFrame.cpp" />
     <ClCompile Include="DoubleTuple.cpp" />
     <ClCompile Include="feedforwardnetwork.cpp" />
     <ClCompile Include="logger.cpp" />
     <ClCompile Include="mainMethod.cpp" />
     <ClCompile Include="networkMath.cpp" />
     <ClCompile Include="Neuron.cpp" />
-    <ClCompile Include="RefFrame.cpp" />
     <ClCompile Include="TrainningSet.cpp" />
     <ClCompile Include="VideoAnalysis.cpp" />
     <ClCompile Include="VideoData.cpp" />

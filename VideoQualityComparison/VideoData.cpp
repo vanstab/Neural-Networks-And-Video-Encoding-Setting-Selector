@@ -50,6 +50,7 @@ string VideoData::toString(){
 	ss << frameWidth << endl;
 	return ss.str();
 }
+
 string VideoData::getPathOrg(){
 	return pathOrg;
 }
@@ -78,4 +79,19 @@ void VideoData::setPathOrg(string s){
 
 void VideoData::setPathRe(string s){
 	pathRe = s;
+}
+float VideoData::getPercentSame(){
+	return percentSame;
+}
+double VideoData::getSizeOrg(){
+	return sizeOrg;
+}
+double VideoData::getSizeRe(){
+	return sizeRe;
+}
+double VideoData::getHeight(){
+	return frameHeight;
+}
+double VideoData::getWidth(){
+	return frameWidth;
 }
