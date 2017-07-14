@@ -8,6 +8,8 @@ int shared dimension
 int first rows
 int seconds cols
 */
+
+
 void networkMath::dotProduct(int n, int row, int cols, double** first, double** second, double** out){
 
 	for (int y = 0; y < row; y++){
@@ -19,13 +21,11 @@ void networkMath::dotProduct(int n, int row, int cols, double** first, double** 
 			}
 			if (out[y][x] != out[y][x]){
 				std::cout << "dot:";
-				throw NANException(); 
+				throw NANException();
 			}
 		}
 	}
 }
-
-
 
 double networkMath::sigmoid(double z){
 	

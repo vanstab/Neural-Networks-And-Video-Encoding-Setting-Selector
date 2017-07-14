@@ -1,28 +1,24 @@
 #include "BFrame.h"
-BFrame::BFrame(int i)
+BFrame::BFrame()
 {
-	if (i >= BFRAMEMAX) i = BFRAMEMAX;
-	if (i < 0) i = 0;
-	classRep[i] = 1;
-	value = i;
-}
-BFrame::BFrame(int i[])
-{
-	for (int x = 0; x < BFRAMEMAX; x++){
-		if (i[x] == 1){
-			value = x;
-			classRep[x] = 1;
-			break;
-		}
-	}
 }
 int BFrame::getClassFromDouble(double in){
 	for (int i = 0; i < BFRAMEMAX; i++){
-		if (in <= (1.0 / BFRAMEMAX * (i + 1))) return i+1;
+		if (in <= (1.0 / (double)BFRAMEMAX * (i + 1))) return i+1;
 	}
 	return BFRAMEMAX;
 }
 
+double BFrame::BFrameCompare(double in, double compareTo){
+	int i, c;
+	i = getClassFromDouble(in);
+	c = getClassFromDouble(compareTo);
+	if (i == c) return 1.0;
+	else return getDoubleFromClass(i-c);
+}
+double BFrame::getDoubleFromClass(int in){
+	return (double)in/(double) BFRAMEMAX;
+}
 
 BFrame::~BFrame()
 {

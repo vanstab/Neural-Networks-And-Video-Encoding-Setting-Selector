@@ -3,8 +3,13 @@
 #define FramesToCompare 1800
 #define TESTING false
 #define MAX_ARRAY 64
-#define VIDEO_TRAIN_SET_SIZE 10
+#define VIDEO_TRAIN_SET_SIZE 64
 #define TRAINNING_INFO_PATH "trainning_data.dat"
+#define OUTPUT_TRAINING_INFO_PATH "outputTraining.dat"
+#define MAX_THREADS 10
+#define TRAINNING_INFO_OUTPUT_PATH "trainning_output_data.dat"
+
+#define TRAINNING_INFO_INPUT_PATH "trainning_input_data.dat"
 #define REBUILD_TRAINNING_DATA false
 
 //this is for 16x9 videos scales, also determine base input nodes (ie 9216 nodes is values are 128x72)
@@ -31,4 +36,3 @@
 #define HIDDEN_NEURONS 3
 #define SAMPLE_COUNT 196
 #define MAX_DECIMALS 1000000000000000
-#define OUTPUT_TRAINING_INFO_PATH "outputTraining.dat"

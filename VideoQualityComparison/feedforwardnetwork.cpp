@@ -2,15 +2,23 @@
 #include <math.h>
 #include <Windows.h>
 #include <iostream>
+#include <sstream>
 #include "networkMath.h"
 #include <ctime>
 #include <exception>
+#include "BFrame.h"
+#include "RefFrame.h"
+#include "Logger.h"
+#include <random>
+#include "ValueCheck.h"
 using namespace std;
 //build and inits first time neural network
 FeedForwardNetwork::FeedForwardNetwork(int* cols, int size, TrainningSet* train){
 	//builds the neural network
 	trainSet = train;
-	std::srand(std::time(0));
+	random_device rd;
+	mt19937 e2(rd());
+	uniform_real_distribution<> dist(-1, 1);
 	neuralNetwork = new Neuron**[size];
 	networkColsSize = cols;
 	depthOfNetwork = size;
@@ -19,8 +27,9 @@ FeedForwardNetwork::FeedForwardNetwork(int* cols, int size, TrainningSet* train)
 		neuralNetwork[r] = new Neuron*[cols[r]];//create an aray of node pointers
 		for (int c = 0; c < cols[r]; c++){//create nodes and add biases to each of the nodes in layer
 			neuralNetwork[r][c] = new Neuron();
-			if (r >=1)
-				neuralNetwork[r][c]->bias = (double)rand()/(RAND_MAX);
+			if (r >= 1){
+				neuralNetwork[r][c]->bias = dist(e2);
+			}
 		}
 	}
 	//add weights 1- many ie each neuron has many wieghts realted to the next col excluding last col
@@ -28,7 +37,7 @@ FeedForwardNetwork::FeedForwardNetwork(int* cols, int size, TrainningSet* train)
 		for (int c = 0; c < cols[r]; c++){//for each node in that layer add a weight array
 			neuralNetwork[r][c]->createWeights(cols[r+1]);
 			for (int w = 0; w < cols[r + 1]; w++){//for each element in the array and the weight to the next layers node
-				neuralNetwork[r][c]->weights[w] = (double)rand() / (RAND_MAX);//needs to be randomised maybe modified as better way is present apparently?	
+				neuralNetwork[r][c]->weights[w] = dist(e2);//needs to be randomised maybe modified as better way is present apparently?	
 			}
 		}
 	}
@@ -44,6 +53,9 @@ FeedForwardNetwork::~FeedForwardNetwork()
 //
 void FeedForwardNetwork::train(){
 	int itter = 0;
+	random_device rd;
+	mt19937 e2(rd());
+	uniform_real_distribution<> dist(0, VIDEO_TRAIN_SET_SIZE);
 	//get input
 	//now learn from input
 	int batchLength = VIDEO_TRAIN_SET_SIZE;
@@ -84,8 +96,9 @@ void FeedForwardNetwork::train(){
 	}
 
 	int testing = 0;
-	while (testing < 1000){
-		if (testing % 100 == 0) cout << testing << endl;
+	bool isDone = false;
+	while (!isDone){
+		testing++;
 		itter = 0;
 		for (int i = 0; i < depthOfNetwork - 1; i++){
 			for (int d = 0; d < networkColsSize[i + 1]; d++){
@@ -97,7 +110,7 @@ void FeedForwardNetwork::train(){
 				}
 			}
 		}
-
+		int startpoint = dist(e2);
 		while (itter < batchLength){
 			for (int i = 0; i < depthOfNetwork - 1; i++){
 				for (int d = 0; d < networkColsSize[i + 1]; d++){
@@ -109,8 +122,8 @@ void FeedForwardNetwork::train(){
 					}
 				}
 			}
-			try{
-				backpropogation(trainSet->list[itter], trainSet->out[itter], temp);
+			try{//might need to add multitreading here to allow fast evals also you be better to have list of tuples above and use each depending on thread!
+				backpropogation(trainSet->list[((itter + startpoint) % VIDEO_TRAIN_SET_SIZE)], trainSet->out[((itter + startpoint) % VIDEO_TRAIN_SET_SIZE)], temp);
 
 			}
 			catch (exception& e){
@@ -147,7 +160,21 @@ void FeedForwardNetwork::train(){
 				}
 			}
 		}
-		testing++;
+
+		if (testing % 10000 == 0){
+			int counter = 0,bwrong = 0, rwrong = 0, bitwrong = 0;
+			cout << testing << ":";
+			for (int runCheck = 0; runCheck < VIDEO_TRAIN_SET_SIZE; runCheck++){
+				feedForward(trainSet->list[runCheck]);
+				int wrongcheck = ValueCheck::check(neuralNetwork[depthOfNetwork - 1], trainSet->out[runCheck]);
+				if (wrongcheck == 1) counter++;
+				else if (wrongcheck == -3)bwrong++;
+				else if (wrongcheck == -1)bitwrong++;
+				else if (wrongcheck == -2)rwrong++;
+			}
+			if (counter >= VIDEO_TRAIN_SET_SIZE - 9)isDone = true;
+			cout << counter << " " << bitwrong << " " << rwrong << " " << bwrong <<endl;
+		}
 	}
 	
 	/*

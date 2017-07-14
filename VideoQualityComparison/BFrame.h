@@ -3,11 +3,10 @@
 class BFrame
 {
 public:
-	BFrame(int);
-	BFrame(int[]);
+	BFrame();
 	~BFrame();
-	int value;
-	int classRep[BFRAMEMAX];
-	int getClassFromDouble(double);
+	static int getClassFromDouble(double);
+	static double BFrameCompare(double, double);
+	static double getDoubleFromClass(int);
 };
 

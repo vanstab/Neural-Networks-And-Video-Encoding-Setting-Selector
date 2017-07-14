@@ -3,11 +3,10 @@
 class RefFrame
 {
 public:
-	RefFrame(int);
-	RefFrame(int[]);
+	RefFrame();
 	~RefFrame();
-	int value;
-	int classRep[REFFRAMEMAX];
-	int getClassFromDouble(double);
+	static int getClassFromDouble(double);
+	static double RefFrameCompare(double, double);
+	static double getDoubleFromClass(int);
 };
 

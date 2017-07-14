@@ -18,11 +18,10 @@ public:
 	double* gradiantOut();
 	double* gradianHidden(int, double*, bool);
 	//double actderiv(double);
-	void backpropogate(double);
 
 	void backpropogation(double*, double*, DoubleTuple*);
 	void feedForward(double*);
-
+	void updateWeights();
 
 	Neuron*** neuralNetwork;
 	double* calculateNetworkError();

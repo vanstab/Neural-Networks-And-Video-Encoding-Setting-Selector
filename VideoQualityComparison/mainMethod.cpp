@@ -8,13 +8,13 @@
 #include <shellapi.h>
 int main()
 {
-	int in[5] = {9219,100, 3 };
-	cout << "Building Training Set...";
+	int in[4] = { (SCALE_DOWN_WIDTH*SCALE_DOWN_HEIGHT + 5),100, 50, 3 };
+	cout << "Building Training Set..." <<endl;
 	TrainningSet* trainningSet = new TrainningSet();
 	//	TrainningSet* testSet = new TrainningSet();
 	cout << "Training set built" << endl;
 	cout << "Building Nueral Network...";
-	FeedForwardNetwork *feed = new FeedForwardNetwork(in, 3, trainningSet);
+	FeedForwardNetwork *feed = new FeedForwardNetwork(in, 4, trainningSet);
 	cout << "Nueral Network built" << endl;
 	cout << "Training" << endl;
 	try{
@@ -24,14 +24,11 @@ int main()
 		cout << "error";
 	}
 	cout << "checking value...";
-	feed->feedForward(trainningSet->list[0]);
-	cout << feed->neuralNetwork[2][0]->activation << "," << feed->neuralNetwork[2][1]->activation << "," << feed->neuralNetwork[2][2]->activation << endl;
-	cout << trainningSet->out[0][0] << "," << trainningSet->out[0][1] << "," << trainningSet->out[0][2] << endl;
-	cout << "next" << endl;
-	feed->feedForward(trainningSet->list[4]);
-	cout << feed->neuralNetwork[2][0]->activation << "," << feed->neuralNetwork[2][1]->activation << "," << feed->neuralNetwork[2][2]->activation << endl;
-	cout << trainningSet->out[4][0] << "," << trainningSet->out[4][1] << "," << trainningSet->out[4][2] << endl;
-
+	for (int i = 0; i < VIDEO_TRAIN_SET_SIZE; i++){
+		feed->feedForward(trainningSet->list[i]);
+		cout << i << ":" << feed->neuralNetwork[2][0]->activation << "," << feed->neuralNetwork[2][1]->activation << "," << feed->neuralNetwork[2][2]->activation << endl;
+		cout << i << ":" << trainningSet->out[i][0] << "," << trainningSet->out[i][1] << "," << trainningSet->out[i][2] << endl;
+	}
 	//TrainningSet* train = new TrainningSet();
 	//VideoQualityComparison* vid = new VideoQualityComparison();
 	//VideoData* video = new VideoData("D:/VideoTestDataSet/Comparision/pair18org.mov", "D:/VideoTestDataSet/Comparision/pair18re2.mp4", 0, 0, 0, 0, 0);
@@ -99,5 +96,5 @@ int main()
 	}
 	trainfile.close();
 	*/
-	Sleep(10000);
+	Sleep(10000000);
 }
