@@ -1,6 +1,5 @@
 #include "FeedForwardNetwork.h"
 #include <math.h>
-#include <Windows.h>
 #include <iostream>
 #include <sstream>
 #include "networkMath.h"
@@ -13,6 +12,14 @@
 #include "ValueCheck.h"
 using namespace std;
 //build and inits first time neural network
+DWORD WINAPI runBackPropagationThreads(LPVOID lpParam);
+typedef struct THREADDATA {
+	FeedForwardNetwork* fdfw;
+	FeedForwardNetwork* copyNet;
+	int threadNum;
+	int setNum;
+} THREADDATA, *PTHREADDATA;
+
 FeedForwardNetwork::FeedForwardNetwork(int* cols, int size, TrainningSet* train){
 	//builds the neural network
 	trainSet = train;
@@ -41,17 +48,59 @@ FeedForwardNetwork::FeedForwardNetwork(int* cols, int size, TrainningSet* train)
 			}
 		}
 	}
+	threadTuples = new DoubleTuple*[MAX_THREADS];
 }
 
+FeedForwardNetwork::FeedForwardNetwork(const FeedForwardNetwork& obj){
+	depthOfNetwork = obj.depthOfNetwork;
+	networkColsSize = obj.networkColsSize;
+	neuralNetwork = new Neuron**[depthOfNetwork];
+	trainSet = NULL;
+	threadTuples = NULL;
+	for (int r = 0; r <depthOfNetwork; r++){//for the depth not including first input layer
+	
+		
+		neuralNetwork[r] = new Neuron*[networkColsSize[r]];//create an aray of node pointers
+		
+		for (int c = 0; c < networkColsSize[r]; c++){//create nodes and add biases to each of the nodes in layer
+			neuralNetwork[r][c] = new Neuron();
+			if (r >= 1){
+				neuralNetwork[r][c]->bias = obj.neuralNetwork[r][c]->bias;
+			}
+		}
+	}
+	//add weights 1- many ie each neuron has many wieghts realted to the next col excluding last col
+	for (int r = 0; r < depthOfNetwork - 1; r++){//for the depth of the net -1
+		for (int c = 0; c < networkColsSize[r]; c++){//for each node in that layer add a weight array
+			neuralNetwork[r][c]->createWeights(networkColsSize[r + 1]);
+			for (int w = 0; w < networkColsSize[r + 1]; w++){//for each element in the array and the weight to the next layers node
+				neuralNetwork[r][c]->weights[w] = obj.neuralNetwork[r][c]->weights[w];//needs to be randomised maybe modified as better way is present apparently?	
+			}
+		}
+	}
+}
 
 FeedForwardNetwork::~FeedForwardNetwork()
 {
-	for (int r = 0; r < depthOfNetwork; r++){
-			delete neuralNetwork[r];
+	for (int r = 0; r < depthOfNetwork-1; r++){
+		
+		for (int c = 0; c < networkColsSize[r]; c++){
+			 delete neuralNetwork[r][c];
+		}
+		delete [] neuralNetwork[r];
 	}
+	delete[] neuralNetwork;
+
 }
 //
 void FeedForwardNetwork::train(){
+	
+	//for threads
+	PTHREADDATA pDataArray[MAX_THREADS];
+	DWORD   dwThreadIdArray[MAX_THREADS];
+	HANDLE  hThreadArray[MAX_THREADS];
+
+
 	int itter = 0;
 	random_device rd;
 	mt19937 e2(rd());
@@ -78,21 +127,25 @@ void FeedForwardNetwork::train(){
 			}
 		}
 	}
-	temp = new DoubleTuple[depthOfNetwork - 1];
-	for (int i = 0; i < depthOfNetwork - 1; i++){
-		temp[i].bias = new double*[networkColsSize[i + 1]];
-		for (int d = 0; d < networkColsSize[i + 1]; d++){
-			temp[i].bias[d] = new double[1];
-			temp[i].bias[d][0] = 0;
-		}
+	//add array of tuple to list
+	for (int threadCount = 0; threadCount < MAX_THREADS; threadCount++){
+		temp = new DoubleTuple[depthOfNetwork - 1];
+		for (int i = 0; i < depthOfNetwork - 1; i++){
+			temp[i].bias = new double*[networkColsSize[i + 1]];
+			for (int d = 0; d < networkColsSize[i + 1]; d++){
+				temp[i].bias[d] = new double[1];
+				temp[i].bias[d][0] = 0;
+			}
 
-		temp[i].weight = new double*[networkColsSize[i + 1]];
-		for (int d = 0; d < networkColsSize[i + 1]; d++){
-			temp[i].weight[d] = new double[networkColsSize[i]];
-			for (int x = 0; x < networkColsSize[i]; x++){
-				temp[i].weight[d][x] = 0;
+			temp[i].weight = new double*[networkColsSize[i + 1]];
+			for (int d = 0; d < networkColsSize[i + 1]; d++){
+				temp[i].weight[d] = new double[networkColsSize[i]];
+				for (int x = 0; x < networkColsSize[i]; x++){
+					temp[i].weight[d][x] = 0;
+				}
 			}
 		}
+		threadTuples[threadCount] = temp;
 	}
 
 	int testing = 0;
@@ -112,32 +165,56 @@ void FeedForwardNetwork::train(){
 		}
 		int startpoint = dist(e2);
 		while (itter < batchLength){
-			for (int i = 0; i < depthOfNetwork - 1; i++){
-				for (int d = 0; d < networkColsSize[i + 1]; d++){
-					temp[i].bias[d][0] = 0;
-				}
-				for (int d = 0; d < networkColsSize[i + 1]; d++){
-					for (int x = 0; x < networkColsSize[i]; x++){
-						temp[i].weight[d][x] = 0;
+			//clears array for threads
+			for (int threadCount = 0; threadCount < MAX_THREADS; threadCount++){
+				for (int i = 0; i < depthOfNetwork - 1; i++){
+					for (int d = 0; d < networkColsSize[i + 1]; d++){
+						threadTuples[threadCount]->bias[d][0] = 0;
+					}
+					for (int d = 0; d < networkColsSize[i + 1]; d++){
+						for (int x = 0; x < networkColsSize[i]; x++){
+							threadTuples[threadCount]->weight[d][x] = 0;
+						}
 					}
 				}
 			}
-			try{//might need to add multitreading here to allow fast evals also you be better to have list of tuples above and use each depending on thread!
-				backpropogation(trainSet->list[((itter + startpoint) % VIDEO_TRAIN_SET_SIZE)], trainSet->out[((itter + startpoint) % VIDEO_TRAIN_SET_SIZE)], temp);
-
+			try{
+				for (int threadCount = 0; threadCount < MAX_THREADS; threadCount++){
+					pDataArray[threadCount] = (PTHREADDATA)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(THREADDATA));
+					if (pDataArray[threadCount] == NULL)
+						ExitProcess(2);
+					pDataArray[threadCount]->fdfw = this;
+					pDataArray[threadCount]->threadNum = threadCount;
+					pDataArray[threadCount]->setNum = ((itter + startpoint) % VIDEO_TRAIN_SET_SIZE);
+					pDataArray[threadCount]->copyNet = new FeedForwardNetwork(*(pDataArray[threadCount]->fdfw));
+					hThreadArray[threadCount] = CreateThread(NULL, 0,runBackPropagationThreads, pDataArray[threadCount], 0, &dwThreadIdArray[threadCount]);
+					WaitForMultipleObjects(MAX_THREADS, hThreadArray, TRUE, INFINITE);
+				}
+				for (int threadCount = 0; threadCount < MAX_THREADS; threadCount++){
+					CloseHandle(hThreadArray[threadCount]);
+					if (pDataArray[threadCount] != NULL){
+						{ 
+							delete pDataArray[threadCount]->copyNet;
+							HeapFree(GetProcessHeap(), 0, pDataArray[threadCount]);
+							pDataArray[threadCount] = NULL;
+						}
+					}
+				}
 			}
 			catch (exception& e){
 				cout << "error:"<< e.what() << endl;
 			}
 			//keep track of changes
 			try{
-				for (int i = 0; i < depthOfNetwork - 1; i++){
-					for (int d = 0; d < networkColsSize[i + 1]; d++){
-						tuple[i].bias[d][0] += temp[i].bias[d][0];
-					}
-					for (int d = 0; d < networkColsSize[i + 1]; d++){
-						for (int y = 0; y < networkColsSize[i]; y++){
-							tuple[i].weight[d][y] += temp[i].weight[d][y];
+				for (int treadCount = 0; treadCount < MAX_THREADS; treadCount++){
+					for (int i = 0; i < depthOfNetwork - 1; i++){
+						for (int d = 0; d < networkColsSize[i + 1]; d++){
+							tuple[i].bias[d][0] += threadTuples[treadCount]->bias[d][0];
+						}
+						for (int d = 0; d < networkColsSize[i + 1]; d++){
+							for (int y = 0; y < networkColsSize[i]; y++){
+								tuple[i].weight[d][y] += threadTuples[treadCount]->weight[d][y];
+							}
 						}
 					}
 				}
@@ -146,7 +223,7 @@ void FeedForwardNetwork::train(){
 				cout << "error:" << e.what()<< endl;
 			}
 
-			itter++;
+			itter+=MAX_THREADS;
 		}
 		//apply
 		for (int i = 0; i < depthOfNetwork - 1; i++){
@@ -262,4 +339,17 @@ void FeedForwardNetwork::backpropogation(double* inputData, double* expectedOut,
 		cout << "backprop error";
 		throw e;
 	}
+}
+
+
+
+DWORD WINAPI runBackPropagationThreads(LPVOID lpParam){
+	PTHREADDATA data;
+	HANDLE hStdout;
+	hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+	if (hStdout == INVALID_HANDLE_VALUE)
+		return 1;
+	data = (PTHREADDATA)lpParam;
+	data->copyNet->backpropogation(data->fdfw->trainSet->list[data->setNum], data->fdfw->trainSet->out[data->setNum], data->fdfw->threadTuples[data->threadNum]);
+	return 0;
 }

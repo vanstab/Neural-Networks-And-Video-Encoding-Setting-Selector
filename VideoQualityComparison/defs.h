@@ -6,7 +6,7 @@
 #define VIDEO_TRAIN_SET_SIZE 64
 #define TRAINNING_INFO_PATH "trainning_data.dat"
 #define OUTPUT_TRAINING_INFO_PATH "outputTraining.dat"
-#define MAX_THREADS 10
+#define MAX_THREADS 4
 #define TRAINNING_INFO_OUTPUT_PATH "trainning_output_data.dat"
 
 #define TRAINNING_INFO_INPUT_PATH "trainning_input_data.dat"

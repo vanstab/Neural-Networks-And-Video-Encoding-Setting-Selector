@@ -1,4 +1,5 @@
 #pragma once
+#include <Windows.h>
 #include "Neuron.h"
 #include "DoubleTuple.h"
 #include "defs.h"
@@ -8,7 +9,9 @@ using namespace std;
 class FeedForwardNetwork
 {
 public:
+
 	FeedForwardNetwork(int*, int, TrainningSet*);
+	FeedForwardNetwork(const FeedForwardNetwork&);
 	~FeedForwardNetwork();
 	void train();
 	double* activate(double**,int);
@@ -25,12 +28,12 @@ public:
 
 	Neuron*** neuralNetwork;
 	double* calculateNetworkError();
+
+	DoubleTuple** threadTuples;
+	TrainningSet* trainSet;
 private:
 	bool running = true;
 	int* networkColsSize; //might not need
 	int depthOfNetwork;
-	double totalError = 0;
-	int outputs =1;
-	TrainningSet* trainSet;
 };
 

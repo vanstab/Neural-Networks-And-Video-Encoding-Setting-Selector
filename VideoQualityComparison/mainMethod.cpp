@@ -6,9 +6,12 @@
 #include "VideoAnalysis.h"
 #include "feedforwardnetwork.h"
 #include <shellapi.h>
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
 int main()
 {
-	int in[4] = { (SCALE_DOWN_WIDTH*SCALE_DOWN_HEIGHT + 5),100, 50, 3 };
+	int in[4] = { (SCALE_DOWN_WIDTH*SCALE_DOWN_HEIGHT + 5),20, 10, 3 };
 	cout << "Building Training Set..." <<endl;
 	TrainningSet* trainningSet = new TrainningSet();
 	//	TrainningSet* testSet = new TrainningSet();
