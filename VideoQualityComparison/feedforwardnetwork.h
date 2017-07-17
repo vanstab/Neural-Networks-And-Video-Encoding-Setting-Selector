@@ -5,6 +5,8 @@
 #include "defs.h"
 #include "TrainningSet.h"
 #include <string>
+
+#include "CleanUpTrain.h"
 using namespace std;
 class FeedForwardNetwork
 {
@@ -21,19 +23,22 @@ public:
 	double* gradiantOut();
 	double* gradianHidden(int, double*, bool);
 	//double actderiv(double);
-
+	int test();
 	void backpropogation(double*, double*, DoubleTuple*);
 	void feedForward(double*);
-	void updateWeights();
+	void updateWeights(DoubleTuple*);
 
 	Neuron*** neuralNetwork;
 	double* calculateNetworkError();
 
-	DoubleTuple** threadTuples;
 	TrainningSet* trainSet;
+
+	int batchLength = VIDEO_TRAIN_SET_SIZE;
+
+	int depthOfNetwork;
 private:
 	bool running = true;
 	int* networkColsSize; //might not need
-	int depthOfNetwork;
+	CleanUpTrain* clean; 
 };
 

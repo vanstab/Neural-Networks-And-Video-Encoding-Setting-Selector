@@ -57,6 +57,12 @@
     <ClInclude Include="ValueCheck.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CleanUpTrain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TrainningThreadData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="videoQualityComparison.cpp">
@@ -96,6 +102,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ValueCheck.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CleanUpTrain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TrainningThreadData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

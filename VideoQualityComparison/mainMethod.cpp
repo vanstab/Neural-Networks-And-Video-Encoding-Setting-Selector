@@ -6,20 +6,21 @@
 #include "VideoAnalysis.h"
 #include "feedforwardnetwork.h"
 #include <shellapi.h>
-#define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
+#include "BFrame.h"
 int main()
 {
-	int in[4] = { (SCALE_DOWN_WIDTH*SCALE_DOWN_HEIGHT + 5),20, 10, 3 };
+	int in[3] = { (SCALE_DOWN_WIDTH*SCALE_DOWN_HEIGHT + 5),100,3 };
 	cout << "Building Training Set..." <<endl;
 	TrainningSet* trainningSet = new TrainningSet();
 	//	TrainningSet* testSet = new TrainningSet();
 	cout << "Training set built" << endl;
 	cout << "Building Nueral Network...";
-	FeedForwardNetwork *feed = new FeedForwardNetwork(in, 4, trainningSet);
+	FeedForwardNetwork *feed = new FeedForwardNetwork(in,3, trainningSet);
 	cout << "Nueral Network built" << endl;
 	cout << "Training" << endl;
+
 	try{
 		feed->train();
 	}
@@ -99,5 +100,5 @@ int main()
 	}
 	trainfile.close();
 	*/
-	Sleep(10000000);
+	Sleep(1000000000);
 }

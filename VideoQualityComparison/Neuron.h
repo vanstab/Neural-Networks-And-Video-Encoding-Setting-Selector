@@ -4,6 +4,7 @@ class Neuron
 public:
 	void createWeights(int);
 	Neuron();
+	Neuron(const Neuron&);
 	~Neuron();
 	double* weights = nullptr;
 	double bias = 1.0;

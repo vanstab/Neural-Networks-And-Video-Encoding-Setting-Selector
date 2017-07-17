@@ -6,7 +6,7 @@
 #define VIDEO_TRAIN_SET_SIZE 64
 #define TRAINNING_INFO_PATH "trainning_data.dat"
 #define OUTPUT_TRAINING_INFO_PATH "outputTraining.dat"
-#define MAX_THREADS 4
+#define MAX_THREADS 8
 #define TRAINNING_INFO_OUTPUT_PATH "trainning_output_data.dat"
 
 #define TRAINNING_INFO_INPUT_PATH "trainning_input_data.dat"
@@ -26,7 +26,7 @@
 */
 #define VIDEO_ENCODING_COMMAND "HandBrakeCLI -f av_mp4 -E copy -e x264 --no-loose-crop --encoder-profile main --no-two-pass"
 #define EPHOC_TRAIN_MAX 100
-#define LEARNING_RATE 0.5
+#define LEARNING_RATE 0.05
 #define MOMENTUM 0.5
 #define BFRAMEMAX 16
 #define REFFRAMEMAX 6
