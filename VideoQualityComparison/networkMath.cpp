@@ -28,7 +28,8 @@ void networkMath::dotProduct(int n, int row, int cols, double** first, double** 
 }
 
 double networkMath::sigmoid(double z){
-	
+	if (z > 45) return 1.0;
+	if (z < -45) return 0.0;
 	if (z!=z || 1 / (1.0 + exp(-z)) != 1 / (1.0 + exp(-z))){
 		throw NANException();
 	}

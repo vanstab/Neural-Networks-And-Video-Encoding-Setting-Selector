@@ -8,8 +8,9 @@ public:
 	~Neuron();
 	double* weights = nullptr;
 	double bias = 1.0;
-	double activation;
-	double wgain =1.0;
-	double z = 0;
+	double activation = 0.0;
+	double* delta = nullptr;
+	double* prevDelta = nullptr;
+	double gradient;
 };
 

@@ -37,6 +37,8 @@ public:
 
 	int depthOfNetwork;
 private:
+
+	int best = 0;
 	bool running = true;
 	int* networkColsSize; //might not need
 	CleanUpTrain* clean; 

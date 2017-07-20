@@ -6,15 +6,15 @@
 #define VIDEO_TRAIN_SET_SIZE 64
 #define TRAINNING_INFO_PATH "trainning_data.dat"
 #define OUTPUT_TRAINING_INFO_PATH "outputTraining.dat"
-#define MAX_THREADS 8
+#define MAX_THREADS 1
 #define TRAINNING_INFO_OUTPUT_PATH "trainning_output_data.dat"
 
 #define TRAINNING_INFO_INPUT_PATH "trainning_input_data.dat"
 #define REBUILD_TRAINNING_DATA false
 
 //this is for 16x9 videos scales, also determine base input nodes (ie 9216 nodes is values are 128x72)
-#define SCALE_DOWN_HEIGHT 72
-#define SCALE_DOWN_WIDTH 128
+#define SCALE_DOWN_HEIGHT 9
+#define SCALE_DOWN_WIDTH 16
 
 /*constants in the encoding cmd: 
 -f is the output container as mp4
@@ -26,8 +26,8 @@
 */
 #define VIDEO_ENCODING_COMMAND "HandBrakeCLI -f av_mp4 -E copy -e x264 --no-loose-crop --encoder-profile main --no-two-pass"
 #define EPHOC_TRAIN_MAX 100
-#define LEARNING_RATE 0.05
-#define MOMENTUM 0.5
+#define LEARNING_RATE 0.9
+#define MOMENTUM 0.4
 #define BFRAMEMAX 16
 #define REFFRAMEMAX 6
 //defined by classes

@@ -40,7 +40,7 @@ FeedForwardNetwork::FeedForwardNetwork(int* cols, int size, TrainningSet* train)
 		for (int c = 0; c < cols[r]; c++){//for each node in that layer add a weight array
 			neuralNetwork[r][c]->createWeights(cols[r + 1]);
 			for (int w = 0; w < cols[r + 1]; w++){//for each element in the array and the weight to the next layers node
-				neuralNetwork[r][c]->weights[w] = dist(e2);//needs to be randomised maybe modified as better way is present apparently?	
+				neuralNetwork[r][c]->weights[w] = dist(e2) / (cols[r]*cols[r+1]);//needs to be randomised maybe modified as better way is present apparently?	
 			}
 		}
 	}
@@ -113,7 +113,11 @@ void FeedForwardNetwork::train(){
 		for (int i = 0; i < depthOfNetwork - 1; i++){
 			tuple[i].clear();
 		}
-
+		while (itter < 64){
+			backpropogation(trainSet->list[(startpoint + itter) % VIDEO_TRAIN_SET_SIZE], trainSet->out[(startpoint + itter) % VIDEO_TRAIN_SET_SIZE], NULL);
+			itter++;
+		}
+		/*
 		try{
 
 			for (int threads = 0; threads < MAX_THREADS; threads++){
@@ -138,11 +142,11 @@ void FeedForwardNetwork::train(){
 				tuple[i].addTuples(&dataArray[threads]->tuple[i]);
 			}
 		}
-
-		updateWeights(tuple);
-		if (testing % 10000 == 0){
-			cout << "Testing: " << testing << " Correct:";
-			if (test() >= VIDEO_TRAIN_SET_SIZE - 9)isDone = true;
+		*/
+		//updateWeights(tuple);
+		if (testing % 100 == 0){
+			cout << "Testing: " << testing << " Best: " << best << " Correct:";
+			if (test() >= VIDEO_TRAIN_SET_SIZE - 4)isDone = true;
 		}
 	}
 }
@@ -172,17 +176,16 @@ void FeedForwardNetwork::updateWeights(DoubleTuple* tuple){
 
 int FeedForwardNetwork::test(){
 
-	int counter = 0, bwrong = 0, rwrong = 0, bitwrong = 0;
+	int correct = 0, bwrong = 0, rwrong = 0, bitwrong = 0;
 	for (int runCheck = 0; runCheck < VIDEO_TRAIN_SET_SIZE; runCheck++){
 		feedForward(trainSet->list[runCheck]);
-		int wrongcheck = ValueCheck::check(neuralNetwork[depthOfNetwork - 1], trainSet->out[runCheck]);
-		if (wrongcheck == 1) counter++;
-		else if (wrongcheck == -3)bwrong++;
-		else if (wrongcheck == -1)bitwrong++;
-		else if (wrongcheck == -2)rwrong++;
+		ValueCheck::check(neuralNetwork[depthOfNetwork - 1], trainSet->out[runCheck], correct,  bitwrong, rwrong, bwrong);
 	}
-	cout << counter << " " << bitwrong << " " << rwrong << " " << bwrong << endl;
-	return counter;
+	cout << correct << " " << bitwrong << " " << rwrong << " " << bwrong << endl;
+	if (correct > best){
+		best = correct;
+	}
+	return correct;
 }
 
 
@@ -202,7 +205,6 @@ void FeedForwardNetwork::feedForward(double* inputData){
 			for (int weightToNode = 0; weightToNode < networkColsSize[layer - 1]; weightToNode++){
 				total += neuralNetwork[layer - 1][weightToNode]->weights[node] * neuralNetwork[layer - 1][weightToNode]->activation;
 			}
-			neuralNetwork[layer][node]->z = total;
 			try{
 				neuralNetwork[layer][node]->activation = networkMath::sigmoid(total + neuralNetwork[layer][node]->bias);
 			}
@@ -217,7 +219,48 @@ void FeedForwardNetwork::feedForward(double* inputData){
 
 void FeedForwardNetwork::backpropogation(double* inputData, double* expectedOut, DoubleTuple* tuple){
 	feedForward(inputData);
-	try{
+	
+	if (abs((neuralNetwork[depthOfNetwork - 1][0]->activation * 15000) - (expectedOut[0] * 15000)) <= 75) neuralNetwork[depthOfNetwork - 1][0]->gradient = 0;
+	else neuralNetwork[depthOfNetwork - 1][0]->gradient = (expectedOut[0] - neuralNetwork[depthOfNetwork - 1][0]->activation)*(1 - neuralNetwork[depthOfNetwork - 1][0]->activation)*(1 + neuralNetwork[depthOfNetwork - 1][0]->activation);
+	if (RefFrame::getClassFromDouble(expectedOut[1]) == RefFrame::getClassFromDouble(neuralNetwork[depthOfNetwork - 1][1]->activation)) 
+		neuralNetwork[depthOfNetwork - 1][1]->gradient = 0;
+	else neuralNetwork[depthOfNetwork - 1][1]->gradient = (expectedOut[1] - neuralNetwork[depthOfNetwork - 1][1]->activation)*(1 - neuralNetwork[depthOfNetwork - 1][1]->activation)*(1 + neuralNetwork[depthOfNetwork - 1][1]->activation);
+	if (BFrame::getClassFromDouble(expectedOut[2]) == BFrame::getClassFromDouble(neuralNetwork[depthOfNetwork - 1][2]->activation))
+		neuralNetwork[depthOfNetwork - 1][2]->gradient = 0;
+	else neuralNetwork[depthOfNetwork - 1][2]->gradient = (expectedOut[2] - neuralNetwork[depthOfNetwork - 1][2]->activation)*(1 - neuralNetwork[depthOfNetwork - 1][2]->activation)*(1 + neuralNetwork[depthOfNetwork - 1][2]->activation);
+
+
+	for (int curLayer = depthOfNetwork - 2; curLayer >= 0; curLayer--){
+		for (int node = 0; node < networkColsSize[curLayer]; node++){
+			for (int w = 0; w < networkColsSize[curLayer + 1]; w++){
+				neuralNetwork[curLayer][node]->gradient += neuralNetwork[curLayer][node]->weights[w] * neuralNetwork[curLayer + 1][w]->gradient;
+			}
+			neuralNetwork[curLayer][node]->gradient *= neuralNetwork[curLayer][node]->activation*(1 - neuralNetwork[curLayer][node]->activation);
+		}
+	}
+	for (int input = 0; input < networkColsSize[0]; input++){
+		for (int nextLayer = 0; nextLayer < networkColsSize[1]; nextLayer++){
+			neuralNetwork[0][input]->delta[nextLayer] = LEARNING_RATE*neuralNetwork[1][nextLayer]->gradient*neuralNetwork[0][input]->activation*networkMath::sigmoidPrime(neuralNetwork[0][input]->activation + neuralNetwork[0][input]->bias);
+			neuralNetwork[0][input]->weights[nextLayer] += neuralNetwork[0][input]->prevDelta[nextLayer] * MOMENTUM + neuralNetwork[0][input]->delta[nextLayer];
+			neuralNetwork[0][input]->prevDelta[nextLayer] = neuralNetwork[0][input]->delta[nextLayer];
+		}
+	}
+	for (int layer = 1; layer < depthOfNetwork-1; layer++){
+		for (int node = 0; node < networkColsSize[layer]; node++){
+			for (int nextLayer = 0; nextLayer < networkColsSize[layer+1]; nextLayer++){
+				neuralNetwork[layer][node]->delta[nextLayer] = LEARNING_RATE*neuralNetwork[layer + 1][nextLayer]->gradient*neuralNetwork[layer][node]->activation*networkMath::sigmoidPrime(neuralNetwork[layer][node]->activation + neuralNetwork[layer][node]->bias);
+				neuralNetwork[layer][node]->weights[nextLayer] += neuralNetwork[layer][node]->prevDelta[nextLayer] * MOMENTUM + neuralNetwork[layer][node]->delta[nextLayer];
+				neuralNetwork[layer][node]->prevDelta[nextLayer] = neuralNetwork[layer][node]->delta[nextLayer];
+			}
+			neuralNetwork[layer][node]->bias = LEARNING_RATE *neuralNetwork[layer][node]->gradient;
+		}
+	}
+
+	for (int output = 0; output < OUTPUT_NEURONS; output++){
+		neuralNetwork[depthOfNetwork - 1][output]->bias = LEARNING_RATE *neuralNetwork[depthOfNetwork - 1][output]->gradient;
+	}
+
+	/*try{
 		double* active[1];
 		active[0] = new double[networkColsSize[depthOfNetwork - 2]];
 		for (int act = 0; act < networkColsSize[depthOfNetwork - 2]; act++)
@@ -266,7 +309,7 @@ void FeedForwardNetwork::backpropogation(double* inputData, double* expectedOut,
 	catch (exception& e){
 		cout << "backprop error";
 		throw e;
-	}
+	}*/
 }
 
 

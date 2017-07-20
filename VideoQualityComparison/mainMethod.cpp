@@ -11,7 +11,7 @@
 #include "BFrame.h"
 int main()
 {
-	int in[3] = { (SCALE_DOWN_WIDTH*SCALE_DOWN_HEIGHT + 5),100,3 };
+	int in[3] = { (SCALE_DOWN_WIDTH*SCALE_DOWN_HEIGHT + 5),21,3 };
 	cout << "Building Training Set..." <<endl;
 	TrainningSet* trainningSet = new TrainningSet();
 	//	TrainningSet* testSet = new TrainningSet();
