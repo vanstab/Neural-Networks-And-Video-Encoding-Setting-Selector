@@ -128,12 +128,3 @@ double** networkMath::transpose(double** in, int length, int height){
 double networkMath::costDerivative(double activation, double eta){
 	return activation - eta;
 }
-double networkMath::round(double in){
-	if (in != in){
-		std::cout << "round";
-		throw NANException();
-	}
-	in = floor(in * MAX_DECIMALS) / MAX_DECIMALS;
-	
-	return in;
-}

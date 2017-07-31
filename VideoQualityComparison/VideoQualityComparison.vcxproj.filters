@@ -13,61 +13,106 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\GradientDecentNetwork">
+      <UniqueIdentifier>{907d6937-38d2-488e-97cd-7a8d0abc9cd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TrainningSet">
+      <UniqueIdentifier>{bf0e9f07-f637-469a-a071-582fe264d658}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\VideoComparisonAndAnalysis">
+      <UniqueIdentifier>{beeeb05d-3e42-4553-997b-8315e72d1622}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Video">
+      <UniqueIdentifier>{1676232b-5a0b-457d-8030-acf9dc760316}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\SecondNetwork">
+      <UniqueIdentifier>{f2a8238e-b48b-46a0-aaf5-2489a9c8da57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GradientDecentNetwork">
+      <UniqueIdentifier>{8a144b2e-fd3d-49e6-be24-588c6ce670ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\NeuralNetwork">
+      <UniqueIdentifier>{cb2de7f2-f968-4aa7-927e-f39a06851d31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\NeuralNetwork">
+      <UniqueIdentifier>{6c73e343-a104-4192-8bdb-c5f3e9050d80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\SecondNetwork">
+      <UniqueIdentifier>{c88fe52b-d1c0-47ff-bf18-44705adb8569}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Video">
+      <UniqueIdentifier>{a88a39c6-e49b-4544-84b5-c10e65a437b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\VideoComparisonAndAnalysis">
+      <UniqueIdentifier>{866b168e-412f-47b3-86ae-2ce2233dc77d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\TrainningSet">
+      <UniqueIdentifier>{c569a8c6-9f98-493e-8b3e-c0e8e34505c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Other Code">
+      <UniqueIdentifier>{20a8dc4b-885b-43fe-bc03-8030fc5facf6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Other Code">
+      <UniqueIdentifier>{f56006a6-f048-48c2-9517-a5fa3aa8368f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="defs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="videoQualityComparison.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="logger.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="feedforwardnetwork.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TrainningSet.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="VideoData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Neuron.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="VideoAnalysis.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="networkMath.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DoubleTuple.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CustomExceptions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BFrame.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="feedforwardnetwork.h">
+      <Filter>Header Files\GradientDecentNetwork</Filter>
     </ClInclude>
-    <ClInclude Include="RefFrame.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="TrainningSet.h">
+      <Filter>Header Files\TrainningSet</Filter>
+    </ClInclude>
+    <ClInclude Include="Neuron.h">
+      <Filter>Header Files\NeuralNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="networkMath.h">
+      <Filter>Header Files\NeuralNetwork</Filter>
     </ClInclude>
     <ClInclude Include="ValueCheck.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\NeuralNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="RefFrame.h">
+      <Filter>Header Files\Video</Filter>
+    </ClInclude>
+    <ClInclude Include="BFrame.h">
+      <Filter>Header Files\Video</Filter>
+    </ClInclude>
+    <ClInclude Include="VideoData.h">
+      <Filter>Header Files\Video</Filter>
+    </ClInclude>
+    <ClInclude Include="videoQualityComparison.h">
+      <Filter>Header Files\VideoComparisonAndAnalysis</Filter>
+    </ClInclude>
+    <ClInclude Include="VideoAnalysis.h">
+      <Filter>Header Files\VideoComparisonAndAnalysis</Filter>
     </ClInclude>
     <ClInclude Include="CleanUpTrain.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\SecondNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="DoubleTuple.h">
+      <Filter>Header Files\SecondNetwork</Filter>
     </ClInclude>
     <ClInclude Include="TrainningThreadData.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\SecondNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="NeuralNetwork.h">
+      <Filter>Header Files\NeuralNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="ToBeDisclosed.h">
+      <Filter>Header Files\SecondNetwork</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="videoQualityComparison.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="mainMethod.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -75,40 +120,52 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="feedforwardnetwork.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\GradientDecentNetwork</Filter>
     </ClCompile>
     <ClCompile Include="TrainningSet.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\TrainningSet</Filter>
     </ClCompile>
-    <ClCompile Include="VideoData.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Neuron.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="videoQualityComparison.cpp">
+      <Filter>Source Files\VideoComparisonAndAnalysis</Filter>
     </ClCompile>
     <ClCompile Include="VideoAnalysis.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="networkMath.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DoubleTuple.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\VideoComparisonAndAnalysis</Filter>
     </ClCompile>
     <ClCompile Include="BFrame.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Video</Filter>
     </ClCompile>
     <ClCompile Include="RefFrame.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Video</Filter>
     </ClCompile>
-    <ClCompile Include="ValueCheck.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="VideoData.cpp">
+      <Filter>Source Files\Video</Filter>
+    </ClCompile>
+    <ClCompile Include="DoubleTuple.cpp">
+      <Filter>Source Files\SecondNetwork</Filter>
     </ClCompile>
     <ClCompile Include="CleanUpTrain.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\SecondNetwork</Filter>
     </ClCompile>
     <ClCompile Include="TrainningThreadData.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\SecondNetwork</Filter>
+    </ClCompile>
+    <ClCompile Include="Neuron.cpp">
+      <Filter>Source Files\NeuralNetwork</Filter>
+    </ClCompile>
+    <ClCompile Include="networkMath.cpp">
+      <Filter>Source Files\NeuralNetwork</Filter>
+    </ClCompile>
+    <ClCompile Include="ValueCheck.cpp">
+      <Filter>Source Files\NeuralNetwork</Filter>
+    </ClCompile>
+    <ClCompile Include="Source.cpp">
+      <Filter>Source Files\Other Code</Filter>
+    </ClCompile>
+    <ClCompile Include="NeuralNetwork.cpp">
+      <Filter>Source Files\NeuralNetwork</Filter>
+    </ClCompile>
+    <ClCompile Include="ToBeDisclosed.cpp">
+      <Filter>Source Files\SecondNetwork</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

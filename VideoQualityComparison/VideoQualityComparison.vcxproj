@@ -29,6 +29,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{822AAF09-64C6-4FCD-A934-19897385D773}</ProjectGuid>
     <RootNamespace>VideoQualityComparison</RootNamespace>
+    <ProjectName>HonoursProject</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -149,9 +150,11 @@
     <ClInclude Include="DoubleTuple.h" />
     <ClInclude Include="feedforwardnetwork.h" />
     <ClInclude Include="logger.h" />
+    <ClInclude Include="NeuralNetwork.h" />
     <ClInclude Include="networkMath.h" />
     <ClInclude Include="Neuron.h" />
     <ClInclude Include="RefFrame.h" />
+    <ClInclude Include="ToBeDisclosed.h" />
     <ClInclude Include="TrainningSet.h" />
     <ClInclude Include="TrainningThreadData.h" />
     <ClInclude Include="ValueCheck.h" />
@@ -166,9 +169,12 @@
     <ClCompile Include="feedforwardnetwork.cpp" />
     <ClCompile Include="logger.cpp" />
     <ClCompile Include="mainMethod.cpp" />
+    <ClCompile Include="NeuralNetwork.cpp" />
     <ClCompile Include="networkMath.cpp" />
     <ClCompile Include="Neuron.cpp" />
     <ClCompile Include="RefFrame.cpp" />
+    <ClCompile Include="Source.cpp" />
+    <ClCompile Include="ToBeDisclosed.cpp" />
     <ClCompile Include="TrainningSet.cpp" />
     <ClCompile Include="TrainningThreadData.cpp" />
     <ClCompile Include="ValueCheck.cpp" />

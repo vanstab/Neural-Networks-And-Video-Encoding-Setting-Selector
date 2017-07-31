@@ -13,5 +13,4 @@ public:
 	static double** kronecker(double**, double**, int,int,int,int);
 	static double** transpose(double**, int, int);
 	static double   costDerivative(double, double);
-	static double   round(double);
 };

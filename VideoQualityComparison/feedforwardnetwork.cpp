@@ -1,50 +1,20 @@
 #include "FeedForwardNetwork.h"
-#include <math.h>
-#include <Windows.h>
 #include <iostream>
 #include <sstream>
-#include "networkMath.h"
-#include <ctime>
 #include <exception>
 #include "BFrame.h"
 #include "RefFrame.h"
-#include "Logger.h"
-#include <random>
-#include "ValueCheck.h"
 #include "TrainningThreadData.h"
+
+#include <random>
 using namespace std;
 
 DWORD WINAPI runBackPropagationThreads(LPVOID lpParam);
 //build and inits first time neural network
-FeedForwardNetwork::FeedForwardNetwork(int* cols, int size, TrainningSet* train){
-	//builds the neural network
-	trainSet = train;
-	random_device rd;
-	mt19937 e2(rd());
-	uniform_real_distribution<> dist(-1, 1);
-	neuralNetwork = new Neuron**[size];
-	networkColsSize = cols;
-	depthOfNetwork = size;
-	//create biases 1-1 relationship ie each neuron gets one past first row
-	for (int r = 0; r <size; r++){//for the depth not including first input layer
-		neuralNetwork[r] = new Neuron*[cols[r]];//create an aray of node pointers
-		for (int c = 0; c < cols[r]; c++){//create nodes and add biases to each of the nodes in layer
-			neuralNetwork[r][c] = new Neuron();
-			if (r >= 1){
-				neuralNetwork[r][c]->bias = dist(e2);
-			}
-		}
-	}
-	//add weights 1- many ie each neuron has many wieghts realted to the next col excluding last col
-	for (int r = 0; r < size - 1; r++){//for the depth of the net -1
-		for (int c = 0; c < cols[r]; c++){//for each node in that layer add a weight array
-			neuralNetwork[r][c]->createWeights(cols[r + 1]);
-			for (int w = 0; w < cols[r + 1]; w++){//for each element in the array and the weight to the next layers node
-				neuralNetwork[r][c]->weights[w] = dist(e2) / (cols[r]*cols[r+1]);//needs to be randomised maybe modified as better way is present apparently?	
-			}
-		}
-	}
+FeedForwardNetwork::FeedForwardNetwork(int* cols, int size, TrainningSet* train) : NeuralNetwork(cols,size,train){
+	
 }
+/*
 FeedForwardNetwork::FeedForwardNetwork(const FeedForwardNetwork& obj) :depthOfNetwork(obj.depthOfNetwork), networkColsSize(obj.networkColsSize), trainSet(obj.trainSet), batchLength(obj.batchLength){
 	neuralNetwork = new Neuron**[depthOfNetwork];
 	for (int r = 0; r <depthOfNetwork; r++){//for the depth not including first input layer
@@ -53,18 +23,10 @@ FeedForwardNetwork::FeedForwardNetwork(const FeedForwardNetwork& obj) :depthOfNe
 			neuralNetwork[r][c] = new Neuron(*obj.neuralNetwork[r][c]);
 		}
 	}
-}
+}*/
 
 FeedForwardNetwork::~FeedForwardNetwork()
 {
-	for (int r = 0; r < depthOfNetwork - 1; r++){
-
-		for (int c = 0; c < networkColsSize[r]; c++){
-			delete neuralNetwork[r][c];
-		}
-		delete[] neuralNetwork[r];
-	}
-	delete[] neuralNetwork;
 }
 //
 void FeedForwardNetwork::train(){
@@ -113,7 +75,7 @@ void FeedForwardNetwork::train(){
 		for (int i = 0; i < depthOfNetwork - 1; i++){
 			tuple[i].clear();
 		}
-		while (itter < 64){
+		while (itter < VIDEO_TRAIN_SET_SIZE){
 			backpropogation(trainSet->list[(startpoint + itter) % VIDEO_TRAIN_SET_SIZE], trainSet->out[(startpoint + itter) % VIDEO_TRAIN_SET_SIZE], NULL);
 			itter++;
 		}
@@ -144,9 +106,9 @@ void FeedForwardNetwork::train(){
 		}
 		*/
 		//updateWeights(tuple);
-		if (testing % 100 == 0){
+		if (testing % 1000 == 0){
 			cout << "Testing: " << testing << " Best: " << best << " Correct:";
-			if (test() >= VIDEO_TRAIN_SET_SIZE - 4)isDone = true;
+			if (test() == VIDEO_TRAIN_SET_TOTAL- VIDEO_TRAIN_SET_SIZE)isDone = true;
 		}
 	}
 }
@@ -174,19 +136,6 @@ void FeedForwardNetwork::updateWeights(DoubleTuple* tuple){
 	}
 }
 
-int FeedForwardNetwork::test(){
-
-	int correct = 0, bwrong = 0, rwrong = 0, bitwrong = 0;
-	for (int runCheck = 0; runCheck < VIDEO_TRAIN_SET_SIZE; runCheck++){
-		feedForward(trainSet->list[runCheck]);
-		ValueCheck::check(neuralNetwork[depthOfNetwork - 1], trainSet->out[runCheck], correct,  bitwrong, rwrong, bwrong);
-	}
-	cout << correct << " " << bitwrong << " " << rwrong << " " << bwrong << endl;
-	if (correct > best){
-		best = correct;
-	}
-	return correct;
-}
 
 
 void FeedForwardNetwork::feedForward(double* inputData){
