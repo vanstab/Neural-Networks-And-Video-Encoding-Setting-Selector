@@ -1,5 +1,5 @@
 #pragma once
-class FeedForwardNetwork;
+class ToBeDiscolsed;
 class DoubleTuple;
 #include "Windows.h"
 class TrainningThreadData
@@ -7,7 +7,7 @@ class TrainningThreadData
 public:
 	TrainningThreadData();
 	~TrainningThreadData();
-	FeedForwardNetwork* copyNet;
+	ToBeDiscolsed* copyNet;
 	DoubleTuple* temp;
 	DoubleTuple* tuple;
 	int startpoint;

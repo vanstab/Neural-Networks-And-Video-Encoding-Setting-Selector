@@ -4,7 +4,7 @@
 class TrainningSet
 {
 public:
-	TrainningSet();
+	TrainningSet(int,int);
 	~TrainningSet();
 	void train();
 	void init();
@@ -13,10 +13,11 @@ public:
 	void normalise();
 	double **list;
 	double **out;
-private:
 	void toFile();
+private:
 	int size;
-	int nin;
-	int nout;
+	int MAX_SIZE;
+	string inPath;
+	string outPath;
 };
 

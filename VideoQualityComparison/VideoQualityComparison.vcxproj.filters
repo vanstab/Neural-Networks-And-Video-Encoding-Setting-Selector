@@ -40,9 +40,6 @@
     <Filter Include="Header Files\SecondNetwork">
       <UniqueIdentifier>{c88fe52b-d1c0-47ff-bf18-44705adb8569}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Video">
-      <UniqueIdentifier>{a88a39c6-e49b-4544-84b5-c10e65a437b8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\VideoComparisonAndAnalysis">
       <UniqueIdentifier>{866b168e-412f-47b3-86ae-2ce2233dc77d}</UniqueIdentifier>
     </Filter>
@@ -54,6 +51,15 @@
     </Filter>
     <Filter Include="Source Files\Other Code">
       <UniqueIdentifier>{f56006a6-f048-48c2-9517-a5fa3aa8368f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TrainningSetBuilder">
+      <UniqueIdentifier>{b8fed4c1-f106-4a1a-9072-a2658257981b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\TrainningSetBuilder">
+      <UniqueIdentifier>{56c481ec-8e5d-448c-a555-3534e2a1ddc2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Video">
+      <UniqueIdentifier>{a88a39c6-e49b-4544-84b5-c10e65a437b8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -111,6 +117,18 @@
     <ClInclude Include="ToBeDisclosed.h">
       <Filter>Header Files\SecondNetwork</Filter>
     </ClInclude>
+    <ClInclude Include="TrainningSetBuilder.h">
+      <Filter>Header Files\TrainningSet</Filter>
+    </ClInclude>
+    <ClInclude Include="Profile.h">
+      <Filter>Header Files\Video</Filter>
+    </ClInclude>
+    <ClInclude Include="EncoderLevel.h">
+      <Filter>Header Files\Video</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameRate.h">
+      <Filter>Header Files\Video</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mainMethod.cpp">
@@ -166,6 +184,18 @@
     </ClCompile>
     <ClCompile Include="ToBeDisclosed.cpp">
       <Filter>Source Files\SecondNetwork</Filter>
+    </ClCompile>
+    <ClCompile Include="TrainningSetBuilder.cpp">
+      <Filter>Source Files\TrainningSet</Filter>
+    </ClCompile>
+    <ClCompile Include="EncoderLevel.cpp">
+      <Filter>Source Files\Video</Filter>
+    </ClCompile>
+    <ClCompile Include="Profile.cpp">
+      <Filter>Source Files\Video</Filter>
+    </ClCompile>
+    <ClCompile Include="FrameRate.cpp">
+      <Filter>Source Files\Video</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

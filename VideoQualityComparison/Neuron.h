@@ -11,6 +11,7 @@ public:
 	double activation = 0.0;
 	double* delta = nullptr;
 	double* prevDelta = nullptr;
-	double gradient;
+	double gradient=0;
+	double z;
 };
 

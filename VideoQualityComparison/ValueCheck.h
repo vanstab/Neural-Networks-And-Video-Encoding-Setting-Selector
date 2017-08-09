@@ -5,7 +5,7 @@ class ValueCheck
 public:
 	ValueCheck();
 	~ValueCheck();
-	static void check(Neuron**, double*out,int&,int&,int&,int&);
+	static void check(Neuron**, double*,int&,int&,int);
 	
 };
 

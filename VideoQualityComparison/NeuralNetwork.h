@@ -10,20 +10,22 @@
 class NeuralNetwork
 {
 public:
-	NeuralNetwork(int*, int, TrainningSet*);
+	NeuralNetwork(int*, int, TrainningSet*, TrainningSet*,int);
 	~NeuralNetwork();
 
 	int test();
 	virtual void train() = 0;
 	virtual void feedForward(double*) = 0;
 	TrainningSet* trainSet;
-
+	TrainningSet* checkSet;
 	int batchLength = VIDEO_TRAIN_SET_SIZE;
 
 	Neuron*** neuralNetwork;
 	int depthOfNetwork;
+	int type;
 protected:
 	int best = 0;
+	int trainbest = 0;
 	bool running = true;
 	int* networkColsSize; //might not need
 };

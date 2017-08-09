@@ -6,10 +6,10 @@ RefFrame::RefFrame()
 }
 
 int RefFrame::getClassFromDouble(double in){
-	for (int i = 0; i < REFFRAMEMAX; i++){
-		if (in <= (1.0 / (double)REFFRAMEMAX * (i + 1))) return i + 1;
+	for (double i = 1; i <= REFFRAMEMAX; i++){
+		if (in <= (i / (double)REFFRAMEMAX)) return i;
 	}
-	return REFFRAMEMAX;
+	return 1;
 }
 
 double RefFrame::RefFrameCompare(double in, double compareTo){

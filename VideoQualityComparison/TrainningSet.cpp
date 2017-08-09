@@ -10,12 +10,33 @@
 #include "BFrame.h"
 #include "RefFrame.h"
 using namespace std;
-TrainningSet::TrainningSet()
+TrainningSet::TrainningSet(int i,int x)
 {
 	size = 0;
-	//if (REBUILD_TRAINNING_DATA)
-	list = new double*[VIDEO_TRAIN_SET_TOTAL];
-	out = new double*[VIDEO_TRAIN_SET_TOTAL];
+	if (i==0){
+		MAX_SIZE = VIDEO_TRAIN_SET_SIZE;
+		//if (REBUILD_TRAINNING_DATA)
+		list = new double*[MAX_SIZE];
+		out = new double*[MAX_SIZE];
+
+		inPath = TRAINNING_TEST_INPUT_PATH;
+		if (x == 0)	outPath = TRAINNING_OUTPUT_ENCODING;
+		else if (x == 1) outPath = TRAINNING_OUTPUT_PROFILE;
+		else if (x == 2) outPath = TRAINNING_OUTPUT_FRAMERATE;
+		else outPath = TRAINNING_OUTPUT_BITRATE;
+	}
+	if (i==1){
+		MAX_SIZE = VIDEO_CHECK_SET_SIZE;
+		//if (REBUILD_TRAINNING_DATA)
+		list = new double*[MAX_SIZE];
+		out = new double*[MAX_SIZE];
+
+		inPath = TRAINNING_CHECK_INPUT_PATH;
+		if (x == 0)	outPath = TRAINNING_OUTPUT_ENCODING;
+		else if (x == 1) outPath = TRAINNING_OUTPUT_PROFILE;
+		else if (x == 2)outPath = TRAINNING_OUTPUT_FRAMERATE;
+		else outPath = TRAINNING_OUTPUT_BITRATE;
+	}
 	//init();
 	load();
 	//else load();
@@ -29,33 +50,30 @@ TrainningSet::~TrainningSet()
 }
 //load exsiting file
 void TrainningSet::load(){
-
 	ifstream input,output;
-	input.open(TRAINNING_INFO_INPUT_PATH, ifstream::in);
-	output.open(TRAINNING_INFO_OUTPUT_PATH, ifstream::in);
+	input.open(inPath, ifstream::in);
+	output.open(outPath, ifstream::in);
 	//sstream ss;
 	string in,o;
 	int tempCount = 0;
-	for (int i = 0; i < VIDEO_TRAIN_SET_TOTAL; i++){
+	for (int i = 0; i < MAX_SIZE; i++){
 		getline(input, in);
 		getline(output, o);
 		istringstream ins(in);
 		istringstream outs(o);
 		string temp;
-		double* testSet = new double[(SCALE_DOWN_WIDTH*SCALE_DOWN_HEIGHT + 5)];
-		double* tempOut = new double[3];
+		double* testSet = new double[INPUT_SIZE];
+		double* tempOut = new double[OUTPUT_NEURONS];
 
 		while(getline(ins,in, ',')){	
-			if (tempCount == SCALE_DOWN_WIDTH*SCALE_DOWN_HEIGHT + 5) break;
+			if (tempCount == 8) break;
 			testSet[tempCount] = stod(in);
 			tempCount++;
 		}
 		tempCount = 0;
-		while (getline(outs, o, ',')){
-			if (tempCount == OUTPUT_NEURONS) break;
-			tempOut[tempCount] = stod(o);
-			tempCount++;
-		}
+		getline(outs, o);
+		tempOut[tempCount] = stod(o);
+
 		add(testSet, tempOut);
 	}
 	input.close();
@@ -77,9 +95,10 @@ void TrainningSet::load(){
 
 
 //create new file
+/*
 void TrainningSet::init(){
 	VideoQualityComparison test;
-	VideoData* videos[VIDEO_TRAIN_SET_TOTAL];
+	VideoData* videos[MAX_SIZE];
 	int videoCount = 0;
 	ifstream inputVideoFile, outputVideoFile;
 	inputVideoFile.open(TRAINNING_INFO_PATH, ifstream::in);
@@ -182,25 +201,23 @@ void TrainningSet::init(){
 	}
 	inputVideoFile.close();
 	//toFile();
-}
+}*/
 
 //adds video data to array;
 void TrainningSet::add(double* data, double* outdata){
-	if (size >= VIDEO_TRAIN_SET_TOTAL)
+	if (size >= MAX_SIZE)
 		return;
 	out[size] = outdata;
 	list[size] = data;
 	size++;
-	
 }
 //writes video data to file;
 void TrainningSet::toFile(){
 	ofstream  trainfile,outfile;
-	trainfile.open(TRAINNING_INFO_INPUT_PATH, ios_base::app);
-	outfile.open(TRAINNING_INFO_OUTPUT_PATH, ios_base::app);
-
-	for (int i = 0; i < VIDEO_TRAIN_SET_TOTAL; i++){
-		for (int x = 0; x < SCALE_DOWN_WIDTH*SCALE_DOWN_HEIGHT + 5; x++){
+	trainfile.open(inPath, ios_base::app);
+	outfile.open(outPath, ios_base::app);
+	for (int i = 0; i < MAX_SIZE-1; i++){
+		for (int x = 0; x < INPUT_SIZE-1; x++){
 			trainfile << list[i][x] << ",";
 		}
 		trainfile << endl;
@@ -209,7 +226,6 @@ void TrainningSet::toFile(){
 		}
 		outfile << endl;
 	}
-
 	trainfile.close();
 	outfile.close();
 }
