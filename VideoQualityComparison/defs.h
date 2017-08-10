@@ -2,20 +2,12 @@
 
 #define FramesToCompare 1800
 #define TESTING false
-#define MAX_ARRAY 64
-#define VIDEO_TRAIN_SET_SIZE 94
+#define VIDEO_TRAIN_SET_SIZE 6000
 
-#define VIDEO_CHECK_SET_SIZE 94
-
-#define INPUT_TRAINING_BIT "inputVid.dat"
-#define OUTPUT_TRAINING_BIT "outputTraining.dat"
-
-#define OUTPUT_CHECKING_BIT  "outputChecking.dat"
+#define VIDEO_CHECK_SET_SIZE 3000
 #define MAX_THREADS 1
-#define TRAINNING_TEST_OUTPUT_PATH "trainning_output_new_data.dat"
-#define TRAINNING_TEST_INPUT_PATH "trainning_input_new_data.dat"
 
-#define TRAINNING_CHECK_OUTPUT_PATH "trainning_output_check_data.dat"
+#define TRAINNING_TEST_INPUT_PATH "trainning_input_test_data.dat"
 #define TRAINNING_CHECK_INPUT_PATH "trainning_input_check_data.dat"
 
 
@@ -45,16 +37,13 @@
 -no-two-pass again for speed of encoding, enabling takes 2x longer to render
 */
 #define VIDEO_ENCODING_COMMAND "HandBrakeCLI -f av_mp4 -E copy -e x264 --no-loose-crop --encoder-profile main --no-two-pass"
-#define EPHOC_TRAIN_MAX 100
-#define LEARNING_RATE .096
-#define MOMENTUM 0.09
+#define LEARNING_RATE 0.000001
+#define MOMENTUM 0.000005
 #define BFRAMEMAX 16
 #define REFFRAMEMAX 6
 #define ENCODERMAX 6
 #define MAXPROFILE 3
-#define MAXFRAMERATE 7
+#define MAXFRAMERATE 8
 //defined by classes
-#define OUTPUT_NEURONS 1
-#define SAMPLE_COUNT 196
 #define VIDEODATABASELOCATION "D:/VideoTestDataSet/allVideos/"
-#define INPUT_SIZE 8
+#define INPUT_SIZE 9

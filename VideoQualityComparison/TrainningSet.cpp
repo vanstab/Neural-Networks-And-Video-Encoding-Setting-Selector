@@ -20,10 +20,22 @@ TrainningSet::TrainningSet(int i,int x)
 		out = new double*[MAX_SIZE];
 
 		inPath = TRAINNING_TEST_INPUT_PATH;
-		if (x == 0)	outPath = TRAINNING_OUTPUT_ENCODING;
-		else if (x == 1) outPath = TRAINNING_OUTPUT_PROFILE;
-		else if (x == 2) outPath = TRAINNING_OUTPUT_FRAMERATE;
-		else outPath = TRAINNING_OUTPUT_BITRATE;
+		if (x == 0){
+			outPath = TRAINNING_OUTPUT_ENCODING;
+			MAX_OUT_SIZE = ENCODERMAX;
+		}
+		else if (x == 1){
+			outPath = TRAINNING_OUTPUT_PROFILE;
+			MAX_OUT_SIZE = MAXPROFILE;
+		}
+		else if (x == 2){
+			outPath = TRAINNING_OUTPUT_FRAMERATE;
+			MAX_OUT_SIZE = MAXFRAMERATE;
+		}
+		else{
+			outPath = TRAINNING_OUTPUT_BITRATE;
+			MAX_OUT_SIZE = 1;
+		}
 	}
 	if (i==1){
 		MAX_SIZE = VIDEO_CHECK_SET_SIZE;
@@ -32,14 +44,24 @@ TrainningSet::TrainningSet(int i,int x)
 		out = new double*[MAX_SIZE];
 
 		inPath = TRAINNING_CHECK_INPUT_PATH;
-		if (x == 0)	outPath = TRAINNING_OUTPUT_ENCODING;
-		else if (x == 1) outPath = TRAINNING_OUTPUT_PROFILE;
-		else if (x == 2)outPath = TRAINNING_OUTPUT_FRAMERATE;
-		else outPath = TRAINNING_OUTPUT_BITRATE;
+		if (x == 0){
+			outPath = TRAINNING_OUTPUT_ENCODING;
+			MAX_OUT_SIZE = ENCODERMAX;
+		}
+		else if (x == 1){
+			outPath = TRAINNING_OUTPUT_PROFILE;
+			MAX_OUT_SIZE = MAXPROFILE;
+		}
+		else if (x == 2){
+			outPath = TRAINNING_OUTPUT_FRAMERATE;
+			MAX_OUT_SIZE = MAXFRAMERATE;
+		}
+		else{
+			outPath = TRAINNING_OUTPUT_BITRATE;
+			MAX_OUT_SIZE = 1;
+		}
 	}
-	//init();
 	load();
-	//else load();
 }
 
 
@@ -53,9 +75,10 @@ void TrainningSet::load(){
 	ifstream input,output;
 	input.open(inPath, ifstream::in);
 	output.open(outPath, ifstream::in);
+	ofstream temps;
+	temps.open("temp.txt", ios_base::app);
 	//sstream ss;
 	string in,o;
-	int tempCount = 0;
 	for (int i = 0; i < MAX_SIZE; i++){
 		getline(input, in);
 		getline(output, o);
@@ -63,17 +86,22 @@ void TrainningSet::load(){
 		istringstream outs(o);
 		string temp;
 		double* testSet = new double[INPUT_SIZE];
-		double* tempOut = new double[OUTPUT_NEURONS];
+		double* tempOut = new double[MAX_OUT_SIZE];
 
+		int tempCount = 0;
 		while(getline(ins,in, ',')){	
-			if (tempCount == 8) break;
 			testSet[tempCount] = stod(in);
 			tempCount++;
+			if (tempCount == INPUT_SIZE) break;
 		}
 		tempCount = 0;
-		getline(outs, o);
-		tempOut[tempCount] = stod(o);
-
+		while (getline(outs, o, ',')){
+			tempOut[tempCount] = stod(o);
+			temps << tempOut[tempCount] << ",";
+			tempCount++;
+			if (tempCount == MAX_OUT_SIZE) break;
+		}
+		temps << endl;
 		add(testSet, tempOut);
 	}
 	input.close();
@@ -210,22 +238,4 @@ void TrainningSet::add(double* data, double* outdata){
 	out[size] = outdata;
 	list[size] = data;
 	size++;
-}
-//writes video data to file;
-void TrainningSet::toFile(){
-	ofstream  trainfile,outfile;
-	trainfile.open(inPath, ios_base::app);
-	outfile.open(outPath, ios_base::app);
-	for (int i = 0; i < MAX_SIZE-1; i++){
-		for (int x = 0; x < INPUT_SIZE-1; x++){
-			trainfile << list[i][x] << ",";
-		}
-		trainfile << endl;
-		for (int x = 0; x < OUTPUT_NEURONS; x++){
-			outfile << out[i][x] << ",";
-		}
-		outfile << endl;
-	}
-	trainfile.close();
-	outfile.close();
 }

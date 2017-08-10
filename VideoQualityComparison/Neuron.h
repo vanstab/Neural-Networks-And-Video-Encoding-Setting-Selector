@@ -13,5 +13,8 @@ public:
 	double* prevDelta = nullptr;
 	double gradient=0;
 	double z;
+	void calcGrad(double);
+	void updateWieghts(Neuron**,int);
+	void calcGrad(Neuron**,int);
 };
 

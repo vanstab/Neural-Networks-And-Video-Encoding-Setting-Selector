@@ -17,6 +17,7 @@ public:
 private:
 	int size;
 	int MAX_SIZE;
+	int MAX_OUT_SIZE;
 	string inPath;
 	string outPath;
 };

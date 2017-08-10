@@ -12,12 +12,17 @@
 #include <crtdbg.h>
 #include "BFrame.h"
 #include "Profile.h"
+
+#include <iostream>
+#include <sstream>
+#include <fstream>
 int main()
 {
 	//TrainningSetBuilder* build = new TrainningSetBuilder();
 	//build->build();
-	int DEPTH_OF_NETWORK = 3;
-	int* in = new int[DEPTH_OF_NETWORK]{ INPUT_SIZE, 6, OUTPUT_NEURONS };
+
+	int DEPTH_OF_NETWORK =3;
+	int* in = new int[DEPTH_OF_NETWORK]{INPUT_SIZE,3,ENCODERMAX};
 	cout << "Building Training Set..." <<endl;
 	//builds the trainning set for each value;
 	TrainningSet* trainningEncSet = new TrainningSet(0,0);
@@ -33,18 +38,18 @@ int main()
 	cout << "Training sets built" << endl;
 	cout << "Building Nueral Network...";
 	//setup individale networks for each output
-	FeedForwardNetwork *feedEnc = new FeedForwardNetwork(in, DEPTH_OF_NETWORK, trainningEncSet, checkEncSet,0);
-	FeedForwardNetwork *feedProf = new FeedForwardNetwork(in, DEPTH_OF_NETWORK, trainningProfSet, checkProfSet,1);
-	FeedForwardNetwork *feedFrame = new FeedForwardNetwork(in, DEPTH_OF_NETWORK, trainningFrameSet, checkFrameSet,2);
-	FeedForwardNetwork *feedBit = new FeedForwardNetwork(in, DEPTH_OF_NETWORK, trainningBitSet, checkBitSet,3);
+	FeedForwardNetwork *feedEnc = new FeedForwardNetwork(in, DEPTH_OF_NETWORK, trainningEncSet, checkEncSet, 0);
+	//ToBeDisclosed *feedProf = new ToBeDisclosed(in, DEPTH_OF_NETWORK, trainningProfSet, checkProfSet, 1);
+//	FeedForwardNetwork *feedFrame = new FeedForwardNetwork(in, DEPTH_OF_NETWORK, trainningFrameSet, checkFrameSet,2);
+//	FeedForwardNetwork *feedBit = new FeedForwardNetwork(in, DEPTH_OF_NETWORK, trainningBitSet, checkBitSet,3);
 
 	cout << "Nueral Network built" << endl;
 	cout << "Training" << endl;
 	try{
 		//trains networks
-		//feedEnc->train();
+		feedEnc->train();
 		//feedProf->train();
-		feedFrame->train();
+		//feedFrame->train();
 		//feedBit->train();
 	}
 	catch (...){

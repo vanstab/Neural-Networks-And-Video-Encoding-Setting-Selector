@@ -151,6 +151,7 @@
     <ClInclude Include="EncoderLevel.h" />
     <ClInclude Include="feedforwardnetwork.h" />
     <ClInclude Include="FrameRate.h" />
+    <ClInclude Include="Layer.h" />
     <ClInclude Include="logger.h" />
     <ClInclude Include="NeuralNetwork.h" />
     <ClInclude Include="networkMath.h" />
@@ -173,6 +174,7 @@
     <ClCompile Include="EncoderLevel.cpp" />
     <ClCompile Include="feedforwardnetwork.cpp" />
     <ClCompile Include="FrameRate.cpp" />
+    <ClCompile Include="Layer.cpp" />
     <ClCompile Include="logger.cpp" />
     <ClCompile Include="mainMethod.cpp" />
     <ClCompile Include="NeuralNetwork.cpp" />

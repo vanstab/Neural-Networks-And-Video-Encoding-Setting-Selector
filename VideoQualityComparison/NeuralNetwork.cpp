@@ -55,23 +55,23 @@ NeuralNetwork::~NeuralNetwork()
 
 int NeuralNetwork::test(){
 	int correct = 0, one = 0;
-	for (int runCheck = 0; runCheck < VIDEO_CHECK_SET_SIZE; runCheck++){
-		feedForward(checkSet->list[(runCheck)]);
-		ValueCheck::check(neuralNetwork[depthOfNetwork - 1], checkSet->out[(runCheck)], correct, one, type);
+	for (int runCheck = 0; runCheck < VIDEO_TRAIN_SET_SIZE; runCheck++){
+		feedForward(trainSet->list[(runCheck)]);
+		ValueCheck::check(neuralNetwork[depthOfNetwork - 1], trainSet->out[(runCheck)], correct, one, networkColsSize[depthOfNetwork - 1]);
 		
+	}
+	
+	cout << " Train: " <<correct << " ";
+	one = correct= 0;
+	for (int runCheck = 0; runCheck <VIDEO_CHECK_SET_SIZE; runCheck++){
+		feedForward(checkSet->list[(runCheck)]);
+		ValueCheck::check(neuralNetwork[depthOfNetwork - 1], checkSet->out[(runCheck)], correct, one, networkColsSize[depthOfNetwork - 1]);
+
 	}
 	if (correct > best){
 
 		best = correct;
 	}
-	cout << " CheckSetCor: " <<correct << " ";
-	int temp = 0;
-	one = 0;
-	for (int runCheck = 0; runCheck <VIDEO_CHECK_SET_SIZE; runCheck++){
-		feedForward(trainSet->list[(runCheck)]);
-		ValueCheck::check(neuralNetwork[depthOfNetwork - 1], trainSet->out[(runCheck)], temp, one, type);
-	}
-		trainbest = temp;
-	cout << " Correct: " << temp << " " << one << endl;	
+	cout << " Correct: " << correct << " " << one << endl;	
 	return correct;
 }

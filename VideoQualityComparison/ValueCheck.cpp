@@ -16,37 +16,25 @@ ValueCheck::~ValueCheck()
 {
 }
 void ValueCheck::check(Neuron** output, double* expected,int& correct,int& one, int type){
-	bool flag = true;
-/*	if (!(abs((output[0]->activation * 15000) - (expected[0] * 15000)) <= 75)){
-		bit++;
-		flag = false;
-	}*
-	if (RefFrame::getClassFromDouble(output[1]->activation) != RefFrame::getClassFromDouble(expected[1])){
-		r++;
-		flag = false;
-	}
-	if (BFrame::getClassFromDouble(output[2]->activation) != BFrame::getClassFromDouble(expected[2])){
-		b++;
-		flag = false;
-	}*/
-	if (type == 0 && EncoderLevel::getClassFromDouble(output[0]->activation) != EncoderLevel::getClassFromDouble(expected[0])){
-		one++;
-		flag = false;
-	}
-	else if (type == 1 && Profile::getClassFromDouble(output[0]->activation) != Profile::getClassFromDouble(expected[1])){
-		one++;
-		flag = false;
-	}
-	else if (type == 2 && FrameRate::getClassFromDouble(output[0]->activation) != FrameRate::getClassFromDouble(expected[2])){
-		one++;
-		flag = false;
-	}
-	else if (type == 3) {
-		one++;
-		flag = false;
-	}
+	int maxActSpot = -1;
+	double curMaxValue = -1;
+	if (type != 1){
+		for (int i = 0; i < type; i++){
+			if (output[i]->activation > curMaxValue){
+				maxActSpot = i;
+				curMaxValue = output[i]->activation;
+			}
+		}
 
+		if (expected[maxActSpot] == 1.0)
+			correct++;
+		else one++;
 
-	if (flag) correct++;
-	
+	}
+	else{
+		if (!(abs(output[0]->activation-expected[0]) <= 0.0075)){
+			one++;
+		}
+		else correct++;
+	}
 }

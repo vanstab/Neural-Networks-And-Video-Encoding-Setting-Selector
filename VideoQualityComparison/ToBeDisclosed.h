@@ -12,6 +12,6 @@ public:
 	void backpropogation(double*, double*, DoubleTuple*);
 
 	void updateWeights(DoubleTuple*);
-
+	double m_error, recent_error, recent_error_smooth;
 };
 
