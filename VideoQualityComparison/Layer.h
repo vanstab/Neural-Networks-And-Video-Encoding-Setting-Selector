@@ -3,8 +3,11 @@
 class Layer
 {
 public:
-	Layer();
+	Layer(int);
 	~Layer();
+	int size(){ return layersize;}
 private:
+	int layersize;
+	Neuron** layer;
 };
 

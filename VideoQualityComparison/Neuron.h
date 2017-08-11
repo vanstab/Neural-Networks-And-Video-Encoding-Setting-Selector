@@ -2,8 +2,7 @@
 class Neuron
 {
 public:
-	void createWeights(int);
-	Neuron();
+	Neuron(int,int);
 	Neuron(const Neuron&);
 	~Neuron();
 	double* weights = nullptr;
@@ -14,7 +13,13 @@ public:
 	double gradient=0;
 	double z;
 	void calcGrad(double);
-	void updateWieghts(Neuron**,int);
+	void updateWieghts(Neuron**,int&);
 	void calcGrad(Neuron**,int);
+	void setoutput(double in){ activation = in; }
+	double getoutput(){ return activation;}
+	void feedForward(Neuron**, int&);
+	int numOut;
+private:
+	int index;
 };
 

@@ -2,15 +2,17 @@
 
 #define FramesToCompare 1800
 #define TESTING false
-#define VIDEO_TRAIN_SET_SIZE 6000
+#define VIDEO_TRAIN_SET_SIZE 4000
 
-#define VIDEO_CHECK_SET_SIZE 3000
+#define VIDEO_CHECK_SET_SIZE 6000
 #define MAX_THREADS 1
 
 #define TRAINNING_TEST_INPUT_PATH "trainning_input_test_data.dat"
 #define TRAINNING_CHECK_INPUT_PATH "trainning_input_check_data.dat"
 
-
+#define TESTIN "testIn.dat"
+#define TESTOUT "testOut.dat"
+#define MAXTESTOUT 1
 #define CHECK_OUTPUT_ENCODING "check_encoding_output.dat"
 #define CHECK_OUTPUT_PROFILE "check_profile_output.dat"
 #define CHECK_OUTPUT_FRAMERATE "check_framerate_output.dat" 
@@ -37,8 +39,8 @@
 -no-two-pass again for speed of encoding, enabling takes 2x longer to render
 */
 #define VIDEO_ENCODING_COMMAND "HandBrakeCLI -f av_mp4 -E copy -e x264 --no-loose-crop --encoder-profile main --no-two-pass"
-#define LEARNING_RATE 0.000001
-#define MOMENTUM 0.000005
+#define LEARNING_RATE 0.1
+#define MOMENTUM 0.5
 #define BFRAMEMAX 16
 #define REFFRAMEMAX 6
 #define ENCODERMAX 6

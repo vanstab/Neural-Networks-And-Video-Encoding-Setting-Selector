@@ -1,8 +1,8 @@
 #include "Layer.h"
 
 
-Layer::Layer()
-{
+Layer::Layer(int size) :layersize(size){
+	layer = new Neuron*[layersize];
 }
 
 

@@ -20,5 +20,6 @@ private:
 	int MAX_OUT_SIZE;
 	string inPath;
 	string outPath;
+	bool bitRateNorm = false;
 };
 

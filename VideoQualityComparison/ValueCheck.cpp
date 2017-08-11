@@ -25,15 +25,14 @@ void ValueCheck::check(Neuron** output, double* expected,int& correct,int& one, 
 				curMaxValue = output[i]->activation;
 			}
 		}
-
 		if (expected[maxActSpot] == 1.0)
 			correct++;
 		else one++;
 
 	}
-	else{
-		if (!(abs(output[0]->activation-expected[0]) <= 0.0075)){
-			one++;
+	else{//within 75 kbps
+		if (!(abs(output[0]->activation - expected[0]) <= 0.000075)){
+				one++;
 		}
 		else correct++;
 	}

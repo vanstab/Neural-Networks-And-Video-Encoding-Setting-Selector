@@ -25,76 +25,50 @@ void ToBeDisclosed::train(){
 	uniform_real_distribution<> dist(0, VIDEO_TRAIN_SET_SIZE);
 	//get input
 	//now learn from input
-	int batchLength = VIDEO_TRAIN_SET_SIZE/10;
+	int batchLength = VIDEO_TRAIN_SET_SIZE/100;
 
-	DoubleTuple* tuple, *temp;
-
-	tuple = new DoubleTuple[depthOfNetwork];
-	temp = new DoubleTuple[depthOfNetwork];
-	for (int i = 0; i < depthOfNetwork; i++){
-		tuple[i].DoubleTupleInit(i, networkColsSize);
-		temp[i].DoubleTupleInit(i, networkColsSize);
-	}
 
 
 	int testing = 0;
 	bool isDone = false;
 	while (!isDone){
 		testing++;
-		itter = 0;
-		int startpoint = dist(e2);
-		for (int i = 0; i < depthOfNetwork; i++){
-			tuple[i].clear();
-		}
+		itter = 1;
+		int startpoint = dist(e2);;
+		while (itter-1<batchLength){
 
-		while (itter < batchLength){
-			for (int i = 0; i < depthOfNetwork; i++){
-				temp[i].clear();
-			}
-			try{//might need to add multitreading here to allow fast evals also you be better to have list of tuples above and use each depending on thread!
-				backpropogation(trainSet->list[((itter + startpoint) % VIDEO_TRAIN_SET_SIZE)], trainSet->out[((itter + startpoint) % VIDEO_TRAIN_SET_SIZE)], temp);
-			}
-			catch (exception& e){
-				cout << "error:" << e.what() << endl;
-			}
-			//keep track of changes
-			
+			feedForward(trainSet->list[((itter + startpoint) % VIDEO_TRAIN_SET_SIZE)]);
+			backpropogation(trainSet->list[((itter + startpoint) % VIDEO_TRAIN_SET_SIZE)], trainSet->out[((itter + startpoint) % VIDEO_TRAIN_SET_SIZE)], NULL);
+
 			itter++;
 		}
-
-		if (testing % 1000 == 0){
-			cout << recent_error;
-			cout << " Testing: " << testing << " Best: " << best;
-			if (test() == VIDEO_CHECK_SET_SIZE)isDone = true;
+		if (testing % 100000 == 0){
+			cout << "Itter: " << testing;
+			test(((itter + startpoint) % VIDEO_TRAIN_SET_SIZE));
+			cout << "         Neterror: " << recent_error << endl;
+			if (recent_error < 0.005 && networkColsSize[depthOfNetwork-1] != 1) break;
+			else if (recent_error < 0.0000005)break; //needs to be smaller as the results are small decimals for bitrate
+			//cout << endl;
 		}
 	}
 }
 
 void ToBeDisclosed::feedForward(double* inputData){
 	for(int inputLayerNode = 0; inputLayerNode < networkColsSize[0]; inputLayerNode++){
-		try{
-			neuralNetwork[0][inputLayerNode]->activation = inputData[inputLayerNode];
-		}
-		catch (exception& e){
-			cout << " feedforward in " << inputLayerNode << e.what() << endl;
-			throw e;
-		}
+			neuralNetwork[0][inputLayerNode]->setoutput(inputData[inputLayerNode]);
 	}
 	for (int layer = 1; layer < depthOfNetwork; layer++){
 		for (int node = 0; node < networkColsSize[layer]; node++){
-			double total = 0;
-			for (int weightToNode = 0; weightToNode < networkColsSize[layer - 1]; weightToNode++){
-				total += neuralNetwork[layer - 1][weightToNode]->weights[node] * neuralNetwork[layer - 1][weightToNode]->activation;
-			}
-			neuralNetwork[layer][node]->activation = networkMath::sigmoid(total + neuralNetwork[layer][node]->bias);
+			neuralNetwork[layer][node]->feedForward(neuralNetwork[layer-1],networkColsSize[layer-1]);
 		}
 	}
+
 }
 
 void ToBeDisclosed::backpropogation(double* inputData, double* expectedOut, DoubleTuple* tuple){
-	feedForward(inputData);
-	m_error = 0;
 	
+	m_error = 0;
+
 	for (int i = 0; i < networkColsSize[depthOfNetwork - 1]; i++){
 		double delta = expectedOut[i] - neuralNetwork[depthOfNetwork - 1][i]->activation;
 		m_error += delta*delta;
@@ -102,19 +76,21 @@ void ToBeDisclosed::backpropogation(double* inputData, double* expectedOut, Doub
 	m_error /= networkColsSize[depthOfNetwork - 1];
 	m_error = sqrt(m_error);
 	recent_error = (recent_error*recent_error_smooth + m_error) / (recent_error + 1.0);
-
+	//calc grads
 	for (int i = 0; i < networkColsSize[depthOfNetwork - 1]; i++){
 		neuralNetwork[depthOfNetwork - 1][i]->calcGrad(expectedOut[i]);
 	}
 
 	for (int i = depthOfNetwork - 2; i > 0; i--){
-		for (int x = 0; x < networkColsSize[i]; x++){
+		for (int x = 0; x < networkColsSize[i]+1; x++){
 			neuralNetwork[i][x]->calcGrad(neuralNetwork[i + 1], networkColsSize[i+1]); //next layer
-			}
 		}
-	for (int i = depthOfNetwork - 2; i>=0; i--){
-		for (int x = 0; x < networkColsSize[i]; x++){
-			neuralNetwork[i][x]->updateWieghts(neuralNetwork[i + 1], networkColsSize[i+1]);
+	}
+
+	//update weughts
+	for (int i = depthOfNetwork - 1; i>0; i--){
+		for (int x = 0; x < networkColsSize[i]+1; x++){
+			neuralNetwork[i][x]->updateWieghts(neuralNetwork[i-1], networkColsSize[i-1]);
 		}
 	}
 }

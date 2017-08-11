@@ -13,6 +13,16 @@ using namespace std;
 TrainningSet::TrainningSet(int i,int x)
 {
 	size = 0;
+	if (i == 3){
+
+		MAX_SIZE = 4;
+
+		inPath = TESTIN;
+		outPath = TESTOUT;
+		MAX_OUT_SIZE = 1;
+		list = new double*[MAX_SIZE];
+		out = new double*[MAX_SIZE];
+	}
 	if (i==0){
 		MAX_SIZE = VIDEO_TRAIN_SET_SIZE;
 		//if (REBUILD_TRAINNING_DATA)
@@ -34,6 +44,7 @@ TrainningSet::TrainningSet(int i,int x)
 		}
 		else{
 			outPath = TRAINNING_OUTPUT_BITRATE;
+			bitRateNorm = true;
 			MAX_OUT_SIZE = 1;
 		}
 	}
@@ -45,19 +56,21 @@ TrainningSet::TrainningSet(int i,int x)
 
 		inPath = TRAINNING_CHECK_INPUT_PATH;
 		if (x == 0){
-			outPath = TRAINNING_OUTPUT_ENCODING;
+			outPath = CHECK_OUTPUT_ENCODING;
 			MAX_OUT_SIZE = ENCODERMAX;
 		}
 		else if (x == 1){
-			outPath = TRAINNING_OUTPUT_PROFILE;
+			outPath = CHECK_OUTPUT_PROFILE;
 			MAX_OUT_SIZE = MAXPROFILE;
 		}
 		else if (x == 2){
-			outPath = TRAINNING_OUTPUT_FRAMERATE;
+			outPath = CHECK_OUTPUT_FRAMERATE;
 			MAX_OUT_SIZE = MAXFRAMERATE;
 		}
 		else{
-			outPath = TRAINNING_OUTPUT_BITRATE;
+			outPath = CHECK_OUTPUT_BITRATE;
+
+			bitRateNorm = true;
 			MAX_OUT_SIZE = 1;
 		}
 	}
@@ -75,8 +88,6 @@ void TrainningSet::load(){
 	ifstream input,output;
 	input.open(inPath, ifstream::in);
 	output.open(outPath, ifstream::in);
-	ofstream temps;
-	temps.open("temp.txt", ios_base::app);
 	//sstream ss;
 	string in,o;
 	for (int i = 0; i < MAX_SIZE; i++){
@@ -96,12 +107,13 @@ void TrainningSet::load(){
 		}
 		tempCount = 0;
 		while (getline(outs, o, ',')){
-			tempOut[tempCount] = stod(o);
-			temps << tempOut[tempCount] << ",";
+			if (!bitRateNorm)tempOut[tempCount] = stod(o);
+			else tempOut[tempCount] = stod(o)/1000.0;  //changes it to gbps from mbps
+			
 			tempCount++;
 			if (tempCount == MAX_OUT_SIZE) break;
+			
 		}
-		temps << endl;
 		add(testSet, tempOut);
 	}
 	input.close();

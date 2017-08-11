@@ -50,10 +50,13 @@ void FeedForwardNetwork::train(){
 			backpropogation(trainSet->list[(startpoint + itter) % VIDEO_TRAIN_SET_SIZE], trainSet->out[(startpoint + itter) % VIDEO_TRAIN_SET_SIZE], NULL);
 			itter++;
 		}
-		if (testing % 1000== 0){
+		if (testing % 1== 0){
 			cout << recent_error;
 			cout << " Testing: " << testing << " Best: " << best;
-			if (test() == VIDEO_CHECK_SET_SIZE)isDone = true;
+			//test();
+
+			Sleep(500);
+		//	if (test() == VIDEO_CHECK_SET_SIZE)isDone = true;
 		}
 	}
 }

@@ -2,8 +2,24 @@
 #include <iostream>
 #include "networkMath.h"
 #include "defs.h"
-Neuron::Neuron()
+
+#include <Windows.h>
+#include <random>
+
+using namespace std;
+Neuron::Neuron(int size, int index) :numOut(size) ,index(index)
 {
+	random_device rd;
+	mt19937 e2(rd());
+	uniform_real_distribution<> dist(-1, 1);
+	weights = new double[size];
+	delta = new double[size];
+	prevDelta = new double[size];
+	for (int i = 0; i < size; i++){
+		weights[i] = dist(e2);
+		delta[i] = 0;
+		prevDelta[i] = 0;
+	}
 }
 
 
@@ -24,28 +40,38 @@ Neuron::Neuron(const Neuron&obj) : bias(obj.bias)
 	activation = 0;
 }
 
-void Neuron::createWeights(int size){
-	weights = new double[size];
-	delta = new double[size];
-	prevDelta = new double[size];
-}
 
 void Neuron::calcGrad(double expected){
 	double delta = expected - activation;
-	gradient = delta * networkMath::sigmoidPrime(activation);
+	gradient = delta * networkMath::tangentDer(activation);
 }
+
 void Neuron::calcGrad(Neuron** in,int size){
-	double delta = 0;
+	double temp = 0;
 	for (int i = 0; i < size; i++){
-		delta += weights[i] * in[i]->gradient;
+		temp += weights[i] * in[i]->gradient;
 	}
-	gradient = delta * networkMath::sigmoidPrime(activation);
+	gradient = temp * networkMath::tangentDer(activation);
 }
-void Neuron::updateWieghts(Neuron** in, int size){
+
+void Neuron::updateWieghts(Neuron** input, int& size){
+
 	for (int i = 0; i < size; i++){
-		double oldDelta = delta[i];
-		double newDeltaWieght = LEARNING_RATE * in[i]->activation +gradient*MOMENTUM*oldDelta;
-		delta[i] = newDeltaWieght;
-		weights[i] += newDeltaWieght;
+		
+		double oldDelta = input[i]->delta[index];
+
+		double newDeltaWieght = LEARNING_RATE * input[i]->activation*gradient + MOMENTUM*oldDelta;
+
+		input[i]->delta[index] = newDeltaWieght;
+		input[i]->weights[index] += newDeltaWieght;
 	}
+}
+
+void Neuron::feedForward(Neuron** in,int& size){
+	double sum = 0.0;
+	for (int i = 0; i < size+1; i++){
+
+		sum += in[i]->activation*in[i]->weights[index];
+	}
+	activation = networkMath::tangentNorm(sum);
 }
