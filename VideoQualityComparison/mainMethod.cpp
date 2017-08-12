@@ -4,14 +4,12 @@
 #include "videoQualityComparison.h"
 #include "VideoData.h"
 #include "VideoAnalysis.h"
-#include "feedforwardnetwork.h"
-#include "ToBeDisclosed.h"
+#include "FeedForwardSigmoid.h"
+#include "FeedForwardHyperTangent.h"
 #include "TrainningSetBuilder.h"
 #include <shellapi.h>
 #include <stdlib.h>
 #include <crtdbg.h>
-#include "BFrame.h"
-#include "Profile.h"
 #include <time.h>
 #include <iostream>
 #include <sstream>
@@ -61,7 +59,7 @@ int main()
 		while (i <= 8){
 			int* inEnc = new int[DEPTH_OF_NETWORK]{INPUT_SIZE, i, ENCODERMAX};
 			cout << "Itter: " << itter << " Hidden Nodes: " << i << " ";
-			ToBeDisclosed *feedEnc = new ToBeDisclosed(inEnc, DEPTH_OF_NETWORK, trainningEncSet, checkEncSet, 0);
+			FeedForwardHyperTangent *feedEnc = new FeedForwardHyperTangent(inEnc, DEPTH_OF_NETWORK, trainningEncSet, checkEncSet, 0);
 			time(&start);
 			feedEnc->train();
 			time(&stop);
@@ -77,7 +75,6 @@ int main()
 				timetotal = 0;
 			}
 			else itter++;
-
 		}
 		//test->train();
 		//trains networks
@@ -90,7 +87,6 @@ int main()
 	catch (...){
 		cout << "error";
 	}
-	cout << "checking value...";
 
 
 //	

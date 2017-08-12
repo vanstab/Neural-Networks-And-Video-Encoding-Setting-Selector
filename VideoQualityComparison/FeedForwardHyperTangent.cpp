@@ -1,24 +1,17 @@
-#include "ToBeDisclosed.h"
-#include <math.h>
-#include <Windows.h>
+#include "FeedForwardHyperTangent.h"
 #include <iostream>
-#include <sstream>
 #include "networkMath.h"
-#include <ctime>
 #include <exception>
-#include "BFrame.h"
-#include "RefFrame.h"
 #include "Logger.h"
 #include <random>
-#include "ValueCheck.h"
 using namespace std;
 //build and inits first time neural network
-ToBeDisclosed::ToBeDisclosed(int* cols, int size, TrainningSet* train, TrainningSet* check,int type) : NeuralNetwork(cols, size, train, check,type){
+FeedForwardHyperTangent::FeedForwardHyperTangent(int* cols, int size, TrainningSet* train, TrainningSet* check, int type) : NeuralNetwork(cols, size, train, check, type){
 	
 }
 
 //
-void ToBeDisclosed::train(){
+void FeedForwardHyperTangent::train(){
 	int itter = 0;
 	random_device rd;
 	mt19937 e2(rd());
@@ -38,7 +31,7 @@ void ToBeDisclosed::train(){
 		while (itter-1<batchLength){
 
 			feedForward(trainSet->list[((itter + startpoint) % VIDEO_TRAIN_SET_SIZE)]);
-			backpropogation(trainSet->list[((itter + startpoint) % VIDEO_TRAIN_SET_SIZE)], trainSet->out[((itter + startpoint) % VIDEO_TRAIN_SET_SIZE)], NULL);
+			backpropogation(trainSet->list[((itter + startpoint) % VIDEO_TRAIN_SET_SIZE)], trainSet->out[((itter + startpoint) % VIDEO_TRAIN_SET_SIZE)]);
 			itter++;
 		}
 		if (testing % 100 == 0){
@@ -60,7 +53,7 @@ void ToBeDisclosed::train(){
 	}
 }
 
-void ToBeDisclosed::feedForward(double* inputData){
+void FeedForwardHyperTangent::feedForward(double* inputData){
 	for(int inputLayerNode = 0; inputLayerNode < networkColsSize[0]; inputLayerNode++){
 			neuralNetwork[0][inputLayerNode]->activation = inputData[inputLayerNode];
 	}
@@ -76,7 +69,7 @@ void ToBeDisclosed::feedForward(double* inputData){
 
 }
 
-void ToBeDisclosed::backpropogation(double* inputData, double* expectedOut, DoubleTuple* tuple){
+void FeedForwardHyperTangent::backpropogation(double* inputData, double* expectedOut){
 	/*  To keep track of errors
 		Got this from ADD CREDIT
 	

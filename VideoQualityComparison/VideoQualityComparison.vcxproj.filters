@@ -66,9 +66,6 @@
     <ClInclude Include="CustomExceptions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="feedforwardnetwork.h">
-      <Filter>Header Files\GradientDecentNetwork</Filter>
-    </ClInclude>
     <ClInclude Include="TrainningSet.h">
       <Filter>Header Files\TrainningSet</Filter>
     </ClInclude>
@@ -81,12 +78,6 @@
     <ClInclude Include="ValueCheck.h">
       <Filter>Header Files\NeuralNetwork</Filter>
     </ClInclude>
-    <ClInclude Include="RefFrame.h">
-      <Filter>Header Files\Video</Filter>
-    </ClInclude>
-    <ClInclude Include="BFrame.h">
-      <Filter>Header Files\Video</Filter>
-    </ClInclude>
     <ClInclude Include="VideoData.h">
       <Filter>Header Files\Video</Filter>
     </ClInclude>
@@ -96,20 +87,8 @@
     <ClInclude Include="VideoAnalysis.h">
       <Filter>Header Files\VideoComparisonAndAnalysis</Filter>
     </ClInclude>
-    <ClInclude Include="CleanUpTrain.h">
-      <Filter>Header Files\SecondNetwork</Filter>
-    </ClInclude>
-    <ClInclude Include="DoubleTuple.h">
-      <Filter>Header Files\SecondNetwork</Filter>
-    </ClInclude>
-    <ClInclude Include="TrainningThreadData.h">
-      <Filter>Header Files\SecondNetwork</Filter>
-    </ClInclude>
     <ClInclude Include="NeuralNetwork.h">
       <Filter>Header Files\NeuralNetwork</Filter>
-    </ClInclude>
-    <ClInclude Include="ToBeDisclosed.h">
-      <Filter>Header Files\SecondNetwork</Filter>
     </ClInclude>
     <ClInclude Include="TrainningSetBuilder.h">
       <Filter>Header Files\TrainningSet</Filter>
@@ -123,8 +102,11 @@
     <ClInclude Include="FrameRate.h">
       <Filter>Header Files\Video</Filter>
     </ClInclude>
-    <ClInclude Include="Layer.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="FeedForwardHyperTangent.h">
+      <Filter>Header Files\SecondNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="FeedForwardSigmoid.h">
+      <Filter>Header Files\GradientDecentNetwork</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -133,9 +115,6 @@
     </ClCompile>
     <ClCompile Include="logger.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="feedforwardnetwork.cpp">
-      <Filter>Source Files\GradientDecentNetwork</Filter>
     </ClCompile>
     <ClCompile Include="TrainningSet.cpp">
       <Filter>Source Files\TrainningSet</Filter>
@@ -146,23 +125,8 @@
     <ClCompile Include="VideoAnalysis.cpp">
       <Filter>Source Files\VideoComparisonAndAnalysis</Filter>
     </ClCompile>
-    <ClCompile Include="BFrame.cpp">
-      <Filter>Source Files\Video</Filter>
-    </ClCompile>
-    <ClCompile Include="RefFrame.cpp">
-      <Filter>Source Files\Video</Filter>
-    </ClCompile>
     <ClCompile Include="VideoData.cpp">
       <Filter>Source Files\Video</Filter>
-    </ClCompile>
-    <ClCompile Include="DoubleTuple.cpp">
-      <Filter>Source Files\SecondNetwork</Filter>
-    </ClCompile>
-    <ClCompile Include="CleanUpTrain.cpp">
-      <Filter>Source Files\SecondNetwork</Filter>
-    </ClCompile>
-    <ClCompile Include="TrainningThreadData.cpp">
-      <Filter>Source Files\SecondNetwork</Filter>
     </ClCompile>
     <ClCompile Include="Neuron.cpp">
       <Filter>Source Files\NeuralNetwork</Filter>
@@ -179,9 +143,6 @@
     <ClCompile Include="NeuralNetwork.cpp">
       <Filter>Source Files\NeuralNetwork</Filter>
     </ClCompile>
-    <ClCompile Include="ToBeDisclosed.cpp">
-      <Filter>Source Files\SecondNetwork</Filter>
-    </ClCompile>
     <ClCompile Include="TrainningSetBuilder.cpp">
       <Filter>Source Files\TrainningSet</Filter>
     </ClCompile>
@@ -194,8 +155,11 @@
     <ClCompile Include="FrameRate.cpp">
       <Filter>Source Files\Video</Filter>
     </ClCompile>
-    <ClCompile Include="Layer.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="FeedForwardHyperTangent.cpp">
+      <Filter>Source Files\SecondNetwork</Filter>
+    </ClCompile>
+    <ClCompile Include="FeedForwardSigmoid.cpp">
+      <Filter>Source Files\GradientDecentNetwork</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

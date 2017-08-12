@@ -1,18 +1,11 @@
-#include "FeedForwardNetwork.h"
+#include "FeedForwardSigmoid.h"
 #include <iostream>
-#include <sstream>
 #include <exception>
-#include "BFrame.h"
-#include "RefFrame.h"
-#include "TrainningThreadData.h"
-#include "EncoderLevel.h"
-#include "Profile.h"
-#include "FrameRate.h"
 #include <random>
 using namespace std;
 
 //build and inits first time neural network
-FeedForwardNetwork::FeedForwardNetwork(int* cols, int size, TrainningSet* train, TrainningSet* check, int type) : NeuralNetwork(cols, size, train,check,type){
+FeedForwardSigmoid::FeedForwardSigmoid(int* cols, int size, TrainningSet* train, TrainningSet* check, int type) : NeuralNetwork(cols, size, train, check, type){
 	
 }
 /*
@@ -26,11 +19,11 @@ FeedForwardNetwork::FeedForwardNetwork(const FeedForwardNetwork& obj) :depthOfNe
 	}
 }*/
 
-FeedForwardNetwork::~FeedForwardNetwork()
+FeedForwardSigmoid::~FeedForwardSigmoid()
 {
 }
 //
-void FeedForwardNetwork::train(){
+void FeedForwardSigmoid::train(){
 	//init class values
 	int itter = 0;
 	random_device rd;
@@ -47,7 +40,7 @@ void FeedForwardNetwork::train(){
 		int startpoint = dist(e2);
 		//non-thread tuple used to apply updates
 		while (itter < VIDEO_TRAIN_SET_SIZE/100){
-			backpropogation(trainSet->list[(startpoint + itter) % VIDEO_TRAIN_SET_SIZE], trainSet->out[(startpoint + itter) % VIDEO_TRAIN_SET_SIZE], NULL);
+			backpropogation(trainSet->list[(startpoint + itter) % VIDEO_TRAIN_SET_SIZE], trainSet->out[(startpoint + itter) % VIDEO_TRAIN_SET_SIZE]);
 			itter++;
 		}
 		if (testing % 1== 0){
@@ -68,7 +61,7 @@ void FeedForwardNetwork::train(){
 
 
 
-void FeedForwardNetwork::feedForward(double* inputData){
+void FeedForwardSigmoid::feedForward(double* inputData){
 	for (int inputLayerNode = 0; inputLayerNode < networkColsSize[0]; inputLayerNode++){
 		try{
 			neuralNetwork[0][inputLayerNode]->activation = inputData[inputLayerNode];
@@ -88,7 +81,7 @@ void FeedForwardNetwork::feedForward(double* inputData){
 		}
 	}
 }
-void FeedForwardNetwork::backpropogation(double* inputData, double* expectedOut, DoubleTuple* tuple){
+void FeedForwardSigmoid::backpropogation(double* inputData, double* expectedOut){
 	feedForward(inputData);
 	for (int i = 0; i < networkColsSize[depthOfNetwork - 1]; i++)
 		neuralNetwork[depthOfNetwork - 1][i]->gradient = (expectedOut[i] - neuralNetwork[depthOfNetwork - 1][i]->activation)*(1 - neuralNetwork[depthOfNetwork - 1][i]->activation)*(1 + neuralNetwork[depthOfNetwork - 1][i]->activation);
