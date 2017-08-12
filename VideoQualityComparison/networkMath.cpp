@@ -51,8 +51,8 @@ double networkMath::tangentNorm(double x){
 	return tanh(x);
 }
 
-double networkMath::tangentDer(double x){
-	return 1.0 - x*x;
+double networkMath::tangentDerivative(double x){
+	return  1.0 - (tanh(x)*tanh(x));
 }
 
 

@@ -17,11 +17,11 @@ NeuralNetwork::NeuralNetwork(int* cols, int size, TrainningSet* train, Trainning
 		int numOut;
 		if (r != size-1)
 			 numOut = cols[r + 1];
-		else numOut = 1;
+		else numOut = 0;
 		
 		neuralNetwork[r] = new Neuron*[cols[r]+1];
 		for (int c = 0; c < cols[r]+1; c++){
-				neuralNetwork[r][c] = new Neuron(numOut, c);
+				neuralNetwork[r][c] = new Neuron(numOut);
 		}
 		neuralNetwork[r][cols[r]]->activation = 1.0;
 	}
@@ -55,7 +55,7 @@ int NeuralNetwork::test(int runCheck){
 		cout << endl;
 		cout << "Got:      ";
 		for (int i = 0; i < networkColsSize[depthOfNetwork - 1]; i++){
-			cout << round(neuralNetwork[depthOfNetwork - 1][i]->getoutput()*100)/100<< " ";
+			cout << round(neuralNetwork[depthOfNetwork - 1][i]->activation*100)/100<< " ";
 		}
 		cout << endl;
 		cout << "Expected: ";
@@ -72,12 +72,12 @@ int NeuralNetwork::test(int runCheck){
 	//cout << " Correct: " << correct << " " << one << endl;	
 	return correct;
 }
-void NeuralNetwork::check(){
+int NeuralNetwork::check(){
 	int count = 0;
 	int wroung = 0;
 	for (int x = 0; x< VIDEO_CHECK_SET_SIZE; x++){
 		feedForward(checkSet->list[x]);
-		cout << "     In" << ":";
+		/*cout << "     In" << ":";
 		for (int i = 0; i < networkColsSize[0]; i++){
 			cout << checkSet->list[x][i] << " ";
 		}
@@ -92,8 +92,9 @@ void NeuralNetwork::check(){
 			cout << checkSet->out[(x)][i] << " ";
 		}
 
-		cout << endl;
+		cout << endl;*/
 		ValueCheck::check(neuralNetwork[depthOfNetwork - 1], checkSet->out[x], count, wroung, networkColsSize[depthOfNetwork - 1]);
 	}
-	cout << "Correct: " << count<< " " << wroung<<endl;
+	//cout << "Correct: " << count<< " " << wroung<<endl;
+	return count;
 }

@@ -7,7 +7,7 @@
 #include <random>
 
 using namespace std;
-Neuron::Neuron(int size, int index) :numOut(size) ,index(index)
+Neuron::Neuron(int size)
 {
 	random_device rd;
 	mt19937 e2(rd());
@@ -40,38 +40,3 @@ Neuron::Neuron(const Neuron&obj) : bias(obj.bias)
 	activation = 0;
 }
 
-
-void Neuron::calcGrad(double expected){
-	double delta = expected - activation;
-	gradient = delta * networkMath::tangentDer(activation);
-}
-
-void Neuron::calcGrad(Neuron** in,int size){
-	double temp = 0;
-	for (int i = 0; i < size; i++){
-		temp += weights[i] * in[i]->gradient;
-	}
-	gradient = temp * networkMath::tangentDer(activation);
-}
-
-void Neuron::updateWieghts(Neuron** input, int& size){
-
-	for (int i = 0; i < size; i++){
-		
-		double oldDelta = input[i]->delta[index];
-
-		double newDeltaWieght = LEARNING_RATE * input[i]->activation*gradient + MOMENTUM*oldDelta;
-
-		input[i]->delta[index] = newDeltaWieght;
-		input[i]->weights[index] += newDeltaWieght;
-	}
-}
-
-void Neuron::feedForward(Neuron** in,int& size){
-	double sum = 0.0;
-	for (int i = 0; i < size+1; i++){
-
-		sum += in[i]->activation*in[i]->weights[index];
-	}
-	activation = networkMath::tangentNorm(sum);
-}

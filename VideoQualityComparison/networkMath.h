@@ -14,5 +14,5 @@ public:
 	static double** transpose(double**, int, int);
 	static double   costDerivative(double, double);
 	static double   tangentNorm(double);
-	static double   tangentDer(double);
+	static double   tangentDerivative(double);
 };

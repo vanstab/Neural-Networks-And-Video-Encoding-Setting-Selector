@@ -12,7 +12,6 @@ public:
 	void backpropogation(double*, double*, DoubleTuple*);
 	void feedForward(double*);
 
-	double m_error, recent_error, recent_error_smooth;
 private:
 };
 

@@ -51,7 +51,6 @@ void FeedForwardNetwork::train(){
 			itter++;
 		}
 		if (testing % 1== 0){
-			cout << recent_error;
 			cout << " Testing: " << testing << " Best: " << best;
 			//test();
 
@@ -91,16 +90,7 @@ void FeedForwardNetwork::feedForward(double* inputData){
 }
 void FeedForwardNetwork::backpropogation(double* inputData, double* expectedOut, DoubleTuple* tuple){
 	feedForward(inputData);
-	m_error = 0;
-
-	for (int i = 0; i < networkColsSize[depthOfNetwork - 1]; i++){
-		double delta = expectedOut[i] - neuralNetwork[depthOfNetwork - 1][i]->activation;
-		m_error += delta*delta;
-	}
-	m_error /= networkColsSize[depthOfNetwork - 1];
-	m_error = sqrt(m_error);
-	recent_error = (recent_error*recent_error_smooth + m_error) / (recent_error + 1.0);
-	for (int i = 0; i < networkColsSize[depthOfNetwork- 1]; i++)
+	for (int i = 0; i < networkColsSize[depthOfNetwork - 1]; i++)
 		neuralNetwork[depthOfNetwork - 1][i]->gradient = (expectedOut[i] - neuralNetwork[depthOfNetwork - 1][i]->activation)*(1 - neuralNetwork[depthOfNetwork - 1][i]->activation)*(1 + neuralNetwork[depthOfNetwork - 1][i]->activation);
 
 	for (int curLayer = depthOfNetwork - 2; curLayer >= 0; curLayer--){

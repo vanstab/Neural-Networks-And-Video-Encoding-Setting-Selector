@@ -39,15 +39,22 @@ void ToBeDisclosed::train(){
 
 			feedForward(trainSet->list[((itter + startpoint) % VIDEO_TRAIN_SET_SIZE)]);
 			backpropogation(trainSet->list[((itter + startpoint) % VIDEO_TRAIN_SET_SIZE)], trainSet->out[((itter + startpoint) % VIDEO_TRAIN_SET_SIZE)], NULL);
-
 			itter++;
 		}
-		if (testing % 100000 == 0){
-			cout << "Itter: " << testing;
-			test(((itter + startpoint) % VIDEO_TRAIN_SET_SIZE));
-			cout << "         Neterror: " << recent_error << endl;
-			if (recent_error < 0.005 && networkColsSize[depthOfNetwork-1] != 1) break;
-			else if (recent_error < 0.0000005)break; //needs to be smaller as the results are small decimals for bitrate
+		if (testing % 100 == 0){
+			int correct = check();
+			if (correct == VIDEO_CHECK_SET_SIZE){
+				cout << testing << " ";
+				break;
+			}
+			if (recent_error < 0.0005 && networkColsSize[depthOfNetwork - 1] != 1 || testing == 100000){
+				cout << testing << " ";
+				break;
+			}
+			else if (recent_error < 0.0000005){ //needs to be smaller as the results are small decimals for bitrate
+				cout << testing << " ";
+				break;
+			}
 			//cout << endl;
 		}
 	}
@@ -55,70 +62,57 @@ void ToBeDisclosed::train(){
 
 void ToBeDisclosed::feedForward(double* inputData){
 	for(int inputLayerNode = 0; inputLayerNode < networkColsSize[0]; inputLayerNode++){
-			neuralNetwork[0][inputLayerNode]->setoutput(inputData[inputLayerNode]);
+			neuralNetwork[0][inputLayerNode]->activation = inputData[inputLayerNode];
 	}
 	for (int layer = 1; layer < depthOfNetwork; layer++){
 		for (int node = 0; node < networkColsSize[layer]; node++){
-			neuralNetwork[layer][node]->feedForward(neuralNetwork[layer-1],networkColsSize[layer-1]);
+			double total = 0;
+			for (int i = 0; i < networkColsSize[layer - 1] + 1; i++){
+				total += neuralNetwork[layer - 1][i]->activation*neuralNetwork[layer - 1][i]->weights[node];
+			}
+			neuralNetwork[layer][node]->activation = networkMath::tangentNorm(total);
 		}
 	}
 
 }
 
 void ToBeDisclosed::backpropogation(double* inputData, double* expectedOut, DoubleTuple* tuple){
+	/*  To keep track of errors
+		Got this from ADD CREDIT
 	
-	m_error = 0;
+		Lines of code 5
+	*/
+	error = 0;
 
 	for (int i = 0; i < networkColsSize[depthOfNetwork - 1]; i++){
 		double delta = expectedOut[i] - neuralNetwork[depthOfNetwork - 1][i]->activation;
-		m_error += delta*delta;
+		error += delta*delta;
 	}
-	m_error /= networkColsSize[depthOfNetwork - 1];
-	m_error = sqrt(m_error);
-	recent_error = (recent_error*recent_error_smooth + m_error) / (recent_error + 1.0);
+	error /= networkColsSize[depthOfNetwork - 1];
+	error = sqrt(error);
+	
+	recent_error = (error) / (recent_error +1.0);
+	
 	//calc grads
 	for (int i = 0; i < networkColsSize[depthOfNetwork - 1]; i++){
-		neuralNetwork[depthOfNetwork - 1][i]->calcGrad(expectedOut[i]);
+		neuralNetwork[depthOfNetwork - 1][i]->gradient = (expectedOut[i] - neuralNetwork[depthOfNetwork - 1][i]->activation)*networkMath::tangentDerivative(neuralNetwork[depthOfNetwork - 1][i]->activation);
 	}
-
-	for (int i = depthOfNetwork - 2; i > 0; i--){
-		for (int x = 0; x < networkColsSize[i]+1; x++){
-			neuralNetwork[i][x]->calcGrad(neuralNetwork[i + 1], networkColsSize[i+1]); //next layer
+	for (int layer = depthOfNetwork - 2; layer > 0; layer--){
+		for (int x = 0; x < networkColsSize[layer] + 1; x++){
+			for (int i = 0; i < networkColsSize[layer + 1]; i++){
+				neuralNetwork[layer][x]->gradient += neuralNetwork[layer][x]->weights[i] * neuralNetwork[layer+1][i]->gradient;
+			}
+			neuralNetwork[layer][x]->gradient *= networkMath::tangentDerivative(neuralNetwork[layer][x]->activation);
 		}
 	}
-
-	//update weughts
-	for (int i = depthOfNetwork - 1; i>0; i--){
-		for (int x = 0; x < networkColsSize[i]+1; x++){
-			neuralNetwork[i][x]->updateWieghts(neuralNetwork[i-1], networkColsSize[i-1]);
+	//update weights
+	for (int layer = depthOfNetwork - 1; layer>0; layer--){
+		for (int x = 0; x < networkColsSize[layer]; x++){
+			for (int i = 0; i < networkColsSize[layer - 1] + 1; i++){
+				neuralNetwork[layer-1][i]->prevDelta[x] = neuralNetwork[layer-1][i]->delta[x];
+				neuralNetwork[layer-1][i]->delta[x] = LEARNING_RATE * neuralNetwork[layer-1][i]->activation*neuralNetwork[layer][x]->gradient + MOMENTUM*neuralNetwork[layer-1][i]->prevDelta[x];
+				neuralNetwork[layer-1][i]->weights[x] += neuralNetwork[layer-1][i]->delta[x];
+			}
 		}
 	}
 }
-	/*
-double* outputDelta = new double[networkColsSize[depthOfNetwork - 1]];
-for (int i = 0; i < networkColsSize[depthOfNetwork - 1]; i++){
-outputDelta[i] = (networkMath::costDerivative(neuralNetwork[depthOfNetwork - 1][i]->activation, expectedOut[i])*networkMath::sigmoidPrime(neuralNetwork[depthOfNetwork - 1][i]->activation));
-}
-double** temp = new double*[networkColsSize[depthOfNetwork - 2]];
-for (int i = 0; i < networkColsSize[depthOfNetwork - 2]; i++){
-temp[i] = neuralNetwork[depthOfNetwork - 2][i]->weights;
-}
-double** returnVal = new double*[1];
-returnVal[0] = new double[networkColsSize[depthOfNetwork - 2]];
-networkMath::dotProduct(networkColsSize[depthOfNetwork - 1], 1, networkColsSize[depthOfNetwork - 2], &outputDelta, temp, returnVal);
-for (int i = 0; i < networkColsSize[depthOfNetwork - 2]; i++){
-returnVal[0][i] = returnVal[0][i] * networkMath::sigmoidPrime(neuralNetwork[depthOfNetwork - 2][i]->activation);
-}
-
-for (int x = 0; x < networkColsSize[0]; x++){
-for (int y = 0; y < networkColsSize[1]; y++){
-neuralNetwork[0][x]->weights[y] -= LEARNING_RATE/VIDEO_TRAIN_SET_SIZE*outputDelta[y];
-if (x == 0)
-neuralNetwork[1][y]->bias = outputDelta[y];
-}
-}
-for (int x = 0; x < networkColsSize[1]; x++){
-for (int y = 0; y < networkColsSize[2]; y++){
-neuralNetwork[1][x]->weights[y] += LEARNING_RATE*neuralNetwork[1][x]->activation*outputDelta[y];
-}
-}*/

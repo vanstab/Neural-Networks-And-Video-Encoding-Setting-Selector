@@ -19,7 +19,7 @@ public:
 	TrainningSet* trainSet;
 	TrainningSet* checkSet;
 	int batchLength = VIDEO_TRAIN_SET_SIZE;
-	void check();
+	int check();
 	Neuron*** neuralNetwork;
 	int depthOfNetwork;
 	int type;

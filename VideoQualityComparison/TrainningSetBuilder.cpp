@@ -25,6 +25,7 @@ TrainningSetBuilder::~TrainningSetBuilder()
 }
 
 int TrainningSetBuilder::build(){
+
 	stringstream spath, ssoutput;
 	ifstream readBitsTest, readBitsCheck,invid;
 	random_device rd;
@@ -228,6 +229,7 @@ int TrainningSetBuilder::build(){
 	}
 	readBitsCheck.close();
 	readBitsTest.close();
+	return 1;
 }
 /*for (int i = 1; i < VIDEO_CHECK_SET_SIZE + VIDEO_TRAIN_SET_SIZE; i++){
 
