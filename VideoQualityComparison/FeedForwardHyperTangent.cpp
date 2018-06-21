@@ -6,7 +6,7 @@
 #include <random>
 using namespace std;
 //build and inits first time neural network
-FeedForwardHyperTangent::FeedForwardHyperTangent(int* cols, int size, TrainningSet* train, TrainningSet* check, int type) : NeuralNetwork(cols, size, train, check, type){
+FeedForwardHyperTangent::FeedForwardHyperTangent(int* cols, int size, TrainningSet* train, TrainningSet* check) : NeuralNetwork(cols, size, train, check){
 	
 }
 
@@ -34,21 +34,11 @@ void FeedForwardHyperTangent::train(){
 			backpropogation(trainSet->list[((itter + startpoint) % VIDEO_TRAIN_SET_SIZE)], trainSet->out[((itter + startpoint) % VIDEO_TRAIN_SET_SIZE)]);
 			itter++;
 		}
-		if (testing % 100 == 0){
+		if (testing % 1000 == 0){
 			int correct = check();
-			if (correct == VIDEO_CHECK_SET_SIZE){
-				cout << testing << " ";
+			if (correct >= 5900 || testing == 1000000){
 				break;
 			}
-			if (recent_error < 0.0005 && networkColsSize[depthOfNetwork - 1] != 1 || testing == 100000){
-				cout << testing << " ";
-				break;
-			}
-			else if (recent_error < 0.0000005){ //needs to be smaller as the results are small decimals for bitrate
-				cout << testing << " ";
-				break;
-			}
-			//cout << endl;
 		}
 	}
 }
@@ -75,7 +65,7 @@ void FeedForwardHyperTangent::backpropogation(double* inputData, double* expecte
 	
 		Lines of code 5
 	*/
-	error = 0;
+	double error = 0;
 
 	for (int i = 0; i < networkColsSize[depthOfNetwork - 1]; i++){
 		double delta = expectedOut[i] - neuralNetwork[depthOfNetwork - 1][i]->activation;

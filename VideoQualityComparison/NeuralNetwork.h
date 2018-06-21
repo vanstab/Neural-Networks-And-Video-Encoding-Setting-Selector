@@ -10,7 +10,7 @@
 class NeuralNetwork
 {
 public:
-	NeuralNetwork(int*, int, TrainningSet*, TrainningSet*,int);
+	NeuralNetwork(int*, int, TrainningSet*, TrainningSet*);
 	~NeuralNetwork();
 
 	int test(int);
@@ -22,7 +22,6 @@ public:
 	int check();
 	Neuron*** neuralNetwork;
 	int depthOfNetwork;
-	int type;
 protected:
 	int best = 0;
 	int trainbest = 0;

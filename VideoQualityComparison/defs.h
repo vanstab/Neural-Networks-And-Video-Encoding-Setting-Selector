@@ -1,7 +1,7 @@
 #pragma once
 
 #define FramesToCompare 1800
-#define TESTING false
+#define TESTING true
 #define VIDEO_TRAIN_SET_SIZE 4000
 
 #define VIDEO_CHECK_SET_SIZE 6000
@@ -38,8 +38,8 @@
 -encoder-profile is set to main, can be high and would improve overal quality to size but much slower
 -no-two-pass again for speed of encoding, enabling takes 2x longer to render
 */
-#define VIDEO_ENCODING_COMMAND "HandBrakeCLI -f av_mp4 -E copy -e x264 --no-loose-crop --encoder-profile main --no-two-pass"
-#define LEARNING_RATE 0.1
+#define VIDEO_ENCODING_COMMAND "HandBrakeCLI -f av_mp4 -E copy -e x264 --no-loose-crop --no-two-pass --crop 0:0:0:0 "
+#define LEARNING_RATE 0.2
 #define MOMENTUM 0.5
 #define BFRAMEMAX 16
 #define REFFRAMEMAX 6

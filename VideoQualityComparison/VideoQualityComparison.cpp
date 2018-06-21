@@ -28,7 +28,7 @@ float VideoQualityComparison::compareImage(Mat org, Mat recoded){
 		hconcat(org, recoded, videos);
 		imshow("Comparison", dest);
 		imshow("Videos", videos);
-		waitKey(25);
+		waitKey(10);
 	}
 
 	//percentage of change
@@ -45,28 +45,48 @@ output: similarity as a percentage
 float VideoQualityComparison::compareVideo(VideoCapture org, VideoCapture recoded, int compareFrames){
 
 	float count = 0;
+	double ratio = 1.0;
 	if (compareFrames <= 0 || org.get(CV_CAP_PROP_FRAME_COUNT) < compareFrames){
 		compareFrames = org.get(CV_CAP_PROP_FRAME_COUNT);
 	}
 	if (org.get(CV_CAP_PROP_FRAME_COUNT) != recoded.get(CV_CAP_PROP_FRAME_COUNT)){
-		string error = "Frame total difference detected! org: " + to_string(org.get(CV_CAP_PROP_FRAME_COUNT)) + " re: " + to_string(recoded.get(CV_CAP_PROP_FRAME_COUNT));
-		Logger::log(error, Logger::warning);
-		compareFrames -= ((org.get(CV_CAP_PROP_FRAME_COUNT) - recoded.get(CV_CAP_PROP_FRAME_COUNT)));
+		if (org.get(CAP_PROP_FPS) != recoded.get(CAP_PROP_FPS)){
+			string error = "FPS difference detected! org: " + to_string(org.get(CAP_PROP_FPS)) + " re: " + to_string(recoded.get(CAP_PROP_FPS));
+			Logger::log(error, Logger::warning);
+			ratio = org.get(CAP_PROP_FPS) / recoded.get(CAP_PROP_FPS);
+			
+			compareFrames = compareFrames / ratio;
+		}
+		if (ratio == 1.0){
+			string error = "Frame total difference detected! org: " + to_string(org.get(CV_CAP_PROP_FRAME_COUNT)) + " re: " + to_string(recoded.get(CV_CAP_PROP_FRAME_COUNT));
+			Logger::log(error, Logger::warning);
+			compareFrames -= ((org.get(CV_CAP_PROP_FRAME_COUNT) - recoded.get(CV_CAP_PROP_FRAME_COUNT)));
+		}
+		else if(compareFrames != recoded.get(CV_CAP_PROP_FRAME_COUNT)){
+			string error = "Frame total difference detected! org: " + to_string(org.get(CV_CAP_PROP_FRAME_COUNT)) + " re: " + to_string(recoded.get(CV_CAP_PROP_FRAME_COUNT));
+			Logger::log(error, Logger::warning);
+			compareFrames -= ((org.get(CV_CAP_PROP_FRAME_COUNT)/ratio - recoded.get(CV_CAP_PROP_FRAME_COUNT)));
+		}
 	}
 	Mat frameOrg, frameRecoded;
 	
-	/*TO DO::
-		add random interval  of segments to check + set number of comparisons needed for each video 
-	*/
 	if (org.get(CAP_PROP_FRAME_WIDTH) != recoded.get(CAP_PROP_FRAME_WIDTH) ||
 		org.get(CAP_PROP_FRAME_HEIGHT) != recoded.get(CAP_PROP_FRAME_HEIGHT)){
-		Logger::log("Frame size differences deterted, skipping video analyse", Logger::error);
+		Logger::log("Frame size differences detected, skipping video analyse", Logger::error);
 		return 0;
 	}
-	for (int i = 0; i < compareFrames; i++){
-		org.read(frameOrg);
-		recoded.read(frameRecoded);
-		count += compareImage(frameOrg, frameRecoded);
+	for (int i = 1; i < compareFrames+1; i++){
+		if (i % 999==0 && round(ratio) != ratio)
+			org.read(frameOrg);
+		else if ((ratio == 1.0 || fmod(i, round(ratio)) != 0)){
+			org.read(frameOrg);
+			recoded.read(frameRecoded);
+			count += compareImage(frameOrg, frameRecoded);
+		}
+		else{
+			org.read(frameOrg);
+			//count += compareImage(frameOrg, frameRecoded);
+		}
 	}
 	count /= compareFrames;
 	return count;

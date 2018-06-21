@@ -30,10 +30,15 @@ void ValueCheck::check(Neuron** output, double* expected,int& correct,int& one, 
 		else one++;
 
 	}
-	else{//within 75 kbps
-		if (!(abs(output[0]->activation - expected[0]) <= 0.000075)){
-				one++;
+	else{//within 100 kbps
+
+		if ((abs(output[0]->activation - expected[0]) <= 0.01)){
+			correct++;
+			
 		}
-		else correct++;
+		else{
+			//std::cout << "expected: " << expected[0] << " Got: " << output[0]->activation << ",";
+			one++;
+		}
 	}
 }

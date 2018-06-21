@@ -1,4 +1,7 @@
 #pragma once
+#include <string>
+#include "Neuron.h"
+using namespace std;
 class FrameRate
 {
 public:
@@ -7,5 +10,6 @@ public:
 
 	static int getClassFromDouble(double);
 	static double getDoubleFromClass(int);
+	static string getStringValue(Neuron**);
 };
 

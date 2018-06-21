@@ -108,7 +108,9 @@ void TrainningSet::load(){
 		tempCount = 0;
 		while (getline(outs, o, ',')){
 			if (!bitRateNorm)tempOut[tempCount] = stod(o);
-			else tempOut[tempCount] = stod(o)/1000.0;  //changes it to gbps from mbps
+			else tempOut[tempCount] = round((stod(o)*10))/100;  //mbps/10
+
+			if (tempOut[tempCount] > 1.0)tempOut[tempCount] = 1.0;//max allowed 10000kbps
 			
 			tempCount++;
 			if (tempCount == MAX_OUT_SIZE) break;

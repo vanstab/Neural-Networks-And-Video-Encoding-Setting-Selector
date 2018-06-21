@@ -3,9 +3,8 @@
 #include <iostream>
 #include "ValueCheck.h"
 using namespace std;
-NeuralNetwork::NeuralNetwork(int* cols, int size, TrainningSet* train, TrainningSet* check, int learning)
+NeuralNetwork::NeuralNetwork(int* cols, int size, TrainningSet* train, TrainningSet* check)
 {
-	type = learning;
 	//builds the neural network
 	trainSet = train;
 	checkSet = check;

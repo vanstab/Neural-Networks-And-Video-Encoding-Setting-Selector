@@ -1,4 +1,8 @@
 #pragma once
+#include <string>
+
+#include "Neuron.h"
+using namespace std;
 class Profile
 {
 public:
@@ -6,5 +10,6 @@ public:
 	~Profile();
 	static int getClassFromDouble(double);
 	static double getDoubleFromClass(int);
+	static string getStringValue(Neuron** );
 };
 
